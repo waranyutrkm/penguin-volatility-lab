@@ -2,10 +2,15 @@
 
 > **Institutional-Grade Crypto Volatility Scanner, Market Breadth Cockpit & Quantitative Research Terminal**
 
+[![Live Web Terminal](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-22c55e?style=for-the-badge&logo=github)](https://waranyutrkm.github.io/penguin-volatility-lab/)
+[![Daily 07:00 AM Sync](https://img.shields.io/badge/Automated%20Sync-Daily%2007%3A00%20AM%20(00%3A00%20UTC)-06b6d4?style=for-the-badge&logo=githubactions)](https://github.com/waranyutrkm/penguin-volatility-lab/actions)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Architecture](https://img.shields.io/badge/Stack-Vanilla%20JS%20%7C%20HTML5%20%7C%20Node.js-10b981.svg)]()
 [![Design System](https://img.shields.io/badge/Design-DTCG%20Tokens%20%7C%20WCAG%202.2%20AA-06b6d4.svg)](DESIGN.md)
 [![Anti-Slop](https://img.shields.io/badge/Doctrine-Zero--Emoji%20Institutional-a855f7.svg)](AGENTS.md)
+
+🌐 **Live Web Application:** [https://waranyutrkm.github.io/penguin-volatility-lab/](https://waranyutrkm.github.io/penguin-volatility-lab/)
 
 ---
 

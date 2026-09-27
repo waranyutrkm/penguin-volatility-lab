@@ -362,12 +362,37 @@ function createRecord(member, dailyBars) {
   return record;
 }
 
+async function fetchCmcConstituents() {
+  // 1. First attempt: local server / serverless proxy endpoint
+  try {
+    const data = await getJSON(CMC_API, "CMC100 API Proxy");
+    if (Array.isArray(data?.data?.constituents) && data.data.constituents.length === 100) {
+      return data;
+    }
+  } catch (err) {
+    console.info("CMC proxy /api/cmc100 not reachable, attempting static snapshot...", err.message);
+  }
+
+  // 2. Second attempt: static daily snapshot (for GitHub Pages / static hosting)
+  try {
+    const staticUrl = new URL("data/cmc100.json", window.location.href).href;
+    const data = await getJSON(staticUrl, "CMC100 Daily Snapshot");
+    if (Array.isArray(data?.data?.constituents) && data.data.constituents.length === 100) {
+      return data;
+    }
+  } catch (err) {
+    console.warn("Static data snapshot failed:", err.message);
+  }
+
+  throw new Error("ไม่สามารถโหลดรายชื่อสมาชิก CMC100 ได้จากทั้ง Proxy และ Snapshot");
+}
+
 async function loadUniverse() {
   setStatus("กำลังโหลดรายชื่อ CMC100 และคู่ Spot ที่เทรดได้…");
   $("refreshUniverseBtn").disabled = true;
   try {
     const [cmc, exchange] = await Promise.all([
-      getJSON(CMC_API, "CMC100"),
+      fetchCmcConstituents(),
       getJSON(`${BINANCE_ROOT}/exchangeInfo`, "Binance exchangeInfo")
     ]);
     const constituents = cmc?.data?.constituents;
@@ -384,7 +409,7 @@ async function loadUniverse() {
       id: String(c.id), cmcId: Number(c.id), name: String(c.name), symbol: String(c.symbol),
       weight: Number(c.weight), url: String(c.url || ""), pair: (pairs.get(String(c.symbol).toUpperCase()) || []).sort()[0] || null
     })).sort((a, b) => b.weight - a.weight);
-    cmcUpdated = cmc.data.last_update || cmc.status?.timestamp || null;
+    cmcUpdated = cmc.data.last_update || cmc.status?.timestamp || cmc.synced_at || null;
     exchangeInfoAt = Date.now();
     records.clear(); fetchErrors.clear(); backtestDone = false; backtestKey = ""; selectedId = null;
     $("exportTradesBtn").disabled = true;
@@ -394,7 +419,7 @@ async function loadUniverse() {
     $("exportBtn").disabled = false;
     renderUniverse(); renderSummary(); renderSelectedPlaceholder();
   } catch (error) {
-    setStatus(`โหลด Universe ไม่สำเร็จ: ${error.message} · ตรวจว่าเปิดผ่าน node server.js`);
+    setStatus(`โหลด Universe ไม่สำเร็จ: ${error.message}`);
     $("universeStamp").textContent = "ยังโหลดรายชื่อ CMC100 ไม่สำเร็จ";
     $("coinRows").innerHTML = `<tr><td colspan="10" class="empty error">${esc(error.message)}</td></tr>`;
   } finally { $("refreshUniverseBtn").disabled = false; }

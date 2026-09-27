@@ -66,6 +66,42 @@ const hint = text => `<button class="tip" type="button" aria-label="${esc(text)}
 const fmt = (value, digits = 2, suffix = "") => value == null || !Number.isFinite(value) ? "—" : `${value.toFixed(digits)}${suffix}`;
 const pct = (value, digits = 1) => value == null || !Number.isFinite(value) ? "—" : `${(value * 100).toFixed(digits)}%`;
 const dateUTC = ms => ms ? new Date(ms).toISOString().slice(0, 16).replace("T", " ") + " UTC" : "—";
+const formatDateTimeThai = ms => {
+  if (!ms) return "—";
+  try {
+    const d = new Date(ms);
+    return new Intl.DateTimeFormat("th-TH-u-ca-gregory", {
+      timeZone: "Asia/Bangkok",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).format(d) + " น.";
+  } catch {
+    return dateUTC(ms);
+  }
+};
+const formatSyncDetailed = ms => {
+  if (!ms) return "—";
+  try {
+    const d = new Date(ms);
+    const thaiStr = new Intl.DateTimeFormat("th-TH-u-ca-gregory", {
+      timeZone: "Asia/Bangkok",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }).format(d) + " น. (เวลาไทย)";
+    const utcStr = d.toISOString().slice(0, 16).replace("T", " ") + " UTC";
+    return `${thaiStr} [${utcStr}]`;
+  } catch {
+    return dateUTC(ms);
+  }
+};
 const formatN = n => Number(n || 0).toLocaleString("en-US");
 const formatPrice = value => Number.isFinite(value) ? Number(value).toLocaleString("en-US", { maximumSignificantDigits: 8 }) : "—";
 const phaseOrder = { release: 0, expand: 1, squeeze: 2, cool: 3, na: 4 };
@@ -413,8 +449,12 @@ async function loadUniverse() {
     exchangeInfoAt = Date.now();
     records.clear(); fetchErrors.clear(); backtestDone = false; backtestKey = ""; selectedId = null;
     $("exportTradesBtn").disabled = true;
-    $("syncStamp").textContent = `CMC100 อัปเดต ${dateUTC(cmcUpdated ? Date.parse(cmcUpdated) : null)}`;
-    $("universeStamp").textContent = `CMC100 · ${formatN(members.length)} constituents · source refresh ${dateUTC(cmcUpdated ? Date.parse(cmcUpdated) : null)}`;
+    const parsedTime = cmcUpdated ? Date.parse(cmcUpdated) : null;
+    const detailedSync = formatSyncDetailed(parsedTime);
+    const thaiShortSync = formatDateTimeThai(parsedTime);
+    if ($("freshnessDate")) $("freshnessDate").textContent = detailedSync;
+    if ($("syncStamp")) $("syncStamp").innerHTML = `ดัชนี CMC100 ล่าสุด: <b class="sync-stamp-val">${thaiShortSync}</b>`;
+    if ($("universeStamp")) $("universeStamp").textContent = `CMC100 · ${formatN(members.length)} constituents · ล่าสุด ${detailedSync}`;
     setStatus(`โหลด CMC100 สำเร็จ · มี Binance Spot USDT ${members.filter(x => x.pair).length}/100 เหรียญ`);
     $("exportBtn").disabled = false;
     renderUniverse(); renderSummary(); renderSelectedPlaceholder();
@@ -1200,7 +1240,7 @@ function renderSelected(record) {
     <div class="studio-hero-right">
       <div class="studio-asof-meta">
         <span class="asof-label">แท่ง Daily ปิดล่าสุด</span>
-        <b class="asof-val">${dateUTC(record.asof)}</b>
+        <b class="asof-val">${formatSyncDetailed(record.asof)}</b>
       </div>
       <div class="studio-hero-actions">
         ${member.pair ? `<a class="btn btn-sm btn-binance" href="${binanceUrl}" target="_blank" rel="noreferrer">Spot Trade ↗</a>` : ""}

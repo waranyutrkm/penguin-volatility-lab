@@ -57,6 +57,13 @@ button{cursor:pointer}
 .subhead{color:var(--muted);font-size:12px}
 .topbar-right{display:flex;align-items:center;gap:14px}
 .topmeta{text-align:right;color:var(--muted);font-size:11px}
+.topmeta-badges{display:inline-flex;align-items:center;gap:8px;justify-content:flex-end}
+.sync-schedule-pill{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:850;letter-spacing:.05em;
+  padding:4px 8px;border-radius:99px;background:rgba(6,182,212,0.15);color:var(--blue-bright);
+  border:1px solid var(--blue-border);
+}
+.sync-stamp-val{font-family:var(--font-mono);color:var(--ink-bright);font-weight:750}
 .readonly{
   display:inline-flex;align-items:center;gap:7px;color:var(--teal-bright);
   background:var(--tealbg);border:1px solid var(--teal-border);padding:5px 10px;
@@ -64,6 +71,31 @@ button{cursor:pointer}
 }
 .dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Data Freshness & Sync Status Bar */
+.data-freshness-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:10px 16px;margin:0 0 14px;
+  background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(6,182,212,0.06));
+  border:1px solid rgba(16,185,129,0.25);border-radius:var(--radius-md);
+  font-size:11.5px;box-shadow:inset 0 1px 0 var(--line-highlight);
+}
+.freshness-col{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.freshness-col.right{justify-content:flex-end}
+.freshness-badge{
+  font-family:var(--font-mono);font-size:9.5px;font-weight:850;letter-spacing:.05em;
+  padding:2px 7px;border-radius:4px;background:rgba(6,182,212,0.15);color:var(--blue-bright);
+  border:1px solid var(--blue-border);
+}
+.freshness-label{color:var(--muted);font-weight:600}
+.freshness-date{color:var(--teal-bright);font-family:var(--font-mono);font-weight:850}
+.freshness-sub{color:var(--muted);font-size:11px}
+.freshness-tag.live{
+  display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:99px;
+  background:var(--tealbg);color:var(--teal-bright);font-size:10px;font-weight:800;
+  border:1px solid var(--teal-border);font-family:var(--font-mono);
+}
+.dot-small{width:5px;height:5px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor;animation:pulse 2s infinite}
 
 /* Theme Toggle */
 .theme-toggle{
@@ -835,7 +867,10 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
       <span class="theme-text">ธีม</span>
     </button>
     <div class="topmeta">
-      <span class="readonly"><i class="dot"></i> BINANCE SPOT · READ ONLY</span>
+      <div class="topmeta-badges">
+        <span class="readonly"><i class="dot"></i> BINANCE SPOT · READ ONLY</span>
+        <span class="sync-schedule-pill">[SYNC 07:00 AM BKK]</span>
+      </div>
       <div id="syncStamp" style="margin-top:7px">กำลังเชื่อมต่อข้อมูลสาธารณะ…</div>
     </div>
   </div>
@@ -854,6 +889,19 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
 
 <main>
 <section id="marketView" class="view">
+  <!-- Data Freshness & Daily Sync Banner -->
+  <div class="data-freshness-bar" id="dataFreshnessBar">
+    <div class="freshness-col">
+      <span class="freshness-badge">[DAILY 07:00 AM SYNC]</span>
+      <span class="freshness-label">สถานะข้อมูลดัชนี CMC100 ล่าสุด:</span>
+      <strong id="freshnessDate" class="freshness-date">กำลังตรวจสอบรอบอัปเดต...</strong>
+    </div>
+    <div class="freshness-col right">
+      <span class="freshness-sub" id="freshnessCycle">รอบอัปเดตดัชนีถัดไป: ทุกวันเวลา 07:00 น. (00:00 UTC · ปิดแท่ง Daily)</span>
+      <span class="freshness-tag live"><i class="dot-small"></i> Live Price Feeds</span>
+    </div>
+  </div>
+
   <section class="panel toolbar" aria-label="ตัวควบคุม universe และการสแกน">
     <div class="field"><label for="coinSearch">ค้นหาเหรียญใน CMC100</label><input id="coinSearch" type="search" placeholder="ชื่อหรือ ticker เช่น BTC, Solana" autocomplete="off"></div>
     <div class="field" style="display:none"><label for="universeFilter">Spot coverage</label><select id="universeFilter"><option value="all">Spot: ทั้งหมด</option><option value="available">มี Binance Spot USDT</option><option value="unavailable">ไม่มีคู่ Binance Spot USDT</option></select></div>

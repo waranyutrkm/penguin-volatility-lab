@@ -1,0 +1,27 @@
+{
+  "name": "penguin-volatility-lab",
+  "version": "1.0.0",
+  "description": "Institutional-grade crypto quantitative terminal & CMC100 volatility scanner with BB-KC regime analysis, 2SD forward volatility cone, and backtest engine.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --check app.js && node --check research.js && node --check server.js"
+  },
+  "keywords": [
+    "quantitative-finance",
+    "crypto-trading",
+    "bollinger-bands",
+    "keltner-channels",
+    "market-breadth",
+    "volatility-regime",
+    "coinmarketcap",
+    "binance",
+    "backtest",
+    "fintech"
+  ],
+  "author": "Waranyu",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,1566 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090e1a">
+<title>Penguin Volatility Lab · CMC100 Crypto Quant</title>
+<style>
+:root{
+  --navy:#090d16;--navy2:#111927;--ink:#f8fafc;--ink-bright:#ffffff;--muted:#94a3b8;--muted-dark:#64748b;
+  --line:#1e293b;--line-subtle:#172234;--line-highlight:rgba(255,255,255,0.06);
+  --paper:#070a10;--white:#0e1524;--card-subtle:#121a2c;--card-hover:#18233c;
+  --teal:#10b981;--teal-bright:#34d399;--tealbg:rgba(16,185,129,0.14);--teal-border:rgba(16,185,129,0.32);--teal-glow:rgba(16,185,129,0.22);
+  --amber:#f59e0b;--amberbg:rgba(245,158,11,0.14);--amber-border:rgba(245,158,11,0.32);
+  --red:#f43f5e;--redbg:rgba(244,63,94,0.14);--red-border:rgba(244,63,94,0.32);
+  --blue:#06b6d4;--blue-bright:#38bdf8;--bluebg:rgba(6,182,212,0.14);--blue-border:rgba(6,182,212,0.32);--blue-glow:rgba(6,182,212,0.22);
+  --purple:#a855f7;--purple-bright:#c084fc;--purplebg:rgba(168,85,247,0.14);--purple-border:rgba(168,85,247,0.35);--purple-glow:rgba(168,85,247,0.25);
+  --shadow-sm:0 2px 8px rgba(0,0,0,0.3);
+  --shadow:0 8px 28px -4px rgba(0,0,0,0.55);
+  --shadow-lg:0 16px 48px -8px rgba(0,0,0,0.7);
+  --radius-sm:6px;--radius-md:9px;--radius-lg:12px;--radius-xl:16px;
+  --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  font-family:var(--font-sans);
+  color:var(--ink);font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale
+}
+[data-theme="light"]{
+  --navy:#0b192c;--navy2:#20344f;--ink:#0f172a;--ink-bright:#020617;--muted:#64748b;--muted-dark:#94a3b8;
+  --line:#e2e8f0;--line-subtle:#edf2f7;--line-highlight:rgba(0,0,0,0.04);
+  --paper:#f8fafc;--white:#ffffff;--card-subtle:#f1f5f9;--card-hover:#e2e8f0;
+  --teal:#0d9488;--teal-bright:#0f766e;--tealbg:#e6fffa;--teal-border:rgba(13,148,136,0.35);--teal-glow:rgba(13,148,136,0.15);
+  --amber:#d97706;--amberbg:#fef3c7;--amber-border:rgba(217,119,6,0.35);
+  --red:#e11d48;--redbg:#ffe4e6;--red-border:rgba(225,29,72,0.35);
+  --blue:#0284c7;--blue-bright:#0369a1;--bluebg:#e0f2fe;--blue-border:rgba(2,132,199,0.35);--blue-glow:rgba(2,132,199,0.15);
+  --purple:#7c3aed;--purple-bright:#6d28d9;--purplebg:#f3e8ff;--purple-border:rgba(124,58,237,0.35);--purple-glow:rgba(124,58,237,0.15);
+  --shadow-sm:0 2px 6px rgba(15,23,42,0.04);
+  --shadow:0 8px 24px rgba(15,23,42,0.07);
+  --shadow-lg:0 14px 34px rgba(15,23,42,0.11)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);font-size:13px;line-height:1.5;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1600px;margin:auto;padding:22px 26px 56px}
+
+/* Topbar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{
+  width:44px;height:44px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#06b6d4,#3b82f6 60%,#8b5cf6);
+  color:#fff;border-radius:12px;font-size:15px;font-weight:900;letter-spacing:.04em;
+  box-shadow:0 0 20px rgba(6,182,212,0.4), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.eyebrow{color:var(--teal);font-size:10px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+.brand h1{font-size:22px;line-height:1.2;margin:2px 0 3px;letter-spacing:-.03em;color:var(--ink-bright);font-weight:850}
+.subhead{color:var(--muted);font-size:12px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.topmeta{text-align:right;color:var(--muted);font-size:11px}
+.readonly{
+  display:inline-flex;align-items:center;gap:7px;color:var(--teal-bright);
+  background:var(--tealbg);border:1px solid var(--teal-border);padding:5px 10px;
+  border-radius:99px;font-size:10px;font-weight:850;letter-spacing:.05em;box-shadow:0 0 10px var(--teal-glow);
+}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Theme Toggle */
+.theme-toggle{
+  display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;
+  border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--white);
+  color:var(--ink);font-size:11px;font-weight:750;transition:all .18s cubic-bezier(0.16,1,0.3,1);
+}
+.theme-toggle:hover{border-color:var(--teal);background:var(--card-hover);color:var(--teal)}
+[data-theme="dark"] .theme-icon-light{display:inline-block}
+[data-theme="dark"] .theme-icon-dark{display:none}
+[data-theme="light"] .theme-icon-light{display:none}
+[data-theme="light"] .theme-icon-dark{display:inline-block}
+
+/* Navigation Tabs */
+.tabs{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--line);padding-bottom:2px}
+.tabs button{
+  min-height:42px;padding:9px 18px;border:0;background:transparent;
+  color:var(--muted);font-weight:750;font-size:13px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  border-bottom:2px solid transparent;transition:all .18s cubic-bezier(0.16,1,0.3,1);
+}
+.tabs button:hover{color:var(--ink-bright);background:var(--card-subtle)}
+.tabs button.active{
+  color:var(--teal-bright);border-bottom-color:var(--teal);background:var(--card-subtle);
+  box-shadow:inset 0 1px 0 var(--line-highlight);
+}
+.tabs button:focus-visible,.btn:focus-visible,.coin-select:focus-visible,.tip:focus-visible,.filter-chip:focus-visible,.combo-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+/* Panels */
+.panel{
+  background:var(--white);border:1px solid var(--line);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow), inset 0 1px 0 var(--line-highlight);
+  transition:border-color .18s cubic-bezier(0.16,1,0.3,1);
+}
+.view{min-width:0}
+.view[hidden]{display:none!important}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+.panel-title{margin:0;font-size:15px;line-height:1.3;color:var(--ink-bright);font-weight:800;letter-spacing:-.01em}
+.panel-subtitle{color:var(--muted);font-size:11px;margin-top:3px}
+.micro-label{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.statusline{display:flex;justify-content:space-between;gap:12px;padding:2px 2px 12px;color:var(--muted);font-size:11px}
+.notice{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--amber-border);background:var(--amberbg);color:var(--amber);border-radius:var(--radius-md);padding:11px 14px;margin:10px 0 14px;font-size:12px}
+.notice>span{font-size:15px;font-weight:900}
+.notice strong{color:inherit}
+.notice.blue{border-color:var(--blue-border);background:var(--bluebg);color:var(--blue)}
+
+/* Toolbar */
+.toolbar{display:grid;grid-template-columns:minmax(210px,1.4fr) repeat(3,minmax(140px,.65fr)) auto auto auto;align-items:end;gap:10px;padding:15px 18px;margin-bottom:14px}
+.field label{display:block;margin-bottom:5px;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase}
+.field input,.field select{
+  width:100%;height:38px;border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:var(--card-subtle);color:var(--ink);padding:0 10px;outline:none;
+  transition:border-color .18s,box-shadow .18s;
+}
+.field input:focus,.field select:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--tealbg)}
+.btn{
+  height:38px;border-radius:var(--radius-sm);padding:0 15px;font-size:11px;font-weight:750;
+  white-space:nowrap;transition:all .18s cubic-bezier(0.16,1,0.3,1);
+}
+.btn.primary{
+  background:linear-gradient(135deg,#0d9488,#059669);border:1px solid rgba(16,185,129,0.5);
+  color:#fff;box-shadow:0 2px 12px rgba(13,148,136,0.35);
+}
+.btn.primary:hover{background:linear-gradient(135deg,#10b981,#0d9488);box-shadow:0 4px 16px rgba(16,185,129,0.45);transform:translateY(-1px)}
+.btn.secondary{background:var(--card-subtle);border:1px solid var(--line);color:var(--ink)}
+.btn.secondary:hover{border-color:var(--teal);background:var(--card-hover);color:var(--ink-bright)}
+.btn:disabled{opacity:.5;cursor:wait;transform:none!important}
+.btn-sm{height:32px;padding:0 11px;font-size:10px}
+.btn-text{border:0;background:transparent;color:var(--teal);font-size:11px;font-weight:750;cursor:pointer;padding:0}
+.btn-text:hover{text-decoration:underline}
+.progress-wrap{grid-column:1/-1;display:flex;align-items:center;gap:10px;margin-top:8px;color:var(--muted);font-size:11px}
+.progress-wrap[hidden]{display:none}
+.progress-wrap progress{flex:1;height:8px;border-radius:99px;accent-color:var(--teal);background:var(--card-subtle)}
+.universe-stamp{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:10px;padding:0 2px 10px}
+
+/* Category-Separated Filters */
+.constituent-filter-panel{padding:15px 18px;margin:0 0 15px}
+.filter-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.filter-panel-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px}
+.filter-summary{max-width:min(55vw,760px);color:var(--muted);font-size:11px;line-height:1.45;text-align:right}
+
+/* Quick Combos Row */
+.quick-combos-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 0 11px;border-bottom:1px dashed var(--line);margin-bottom:12px}
+.combos-label{font-size:10.5px;font-weight:850;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.combos-list{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.combo-btn{
+  padding:5px 10px;border-radius:var(--radius-sm);border:1px solid var(--line);
+  background:var(--card-subtle);color:var(--ink);font-size:11px;font-weight:700;
+  transition:all .18s cubic-bezier(0.16,1,0.3,1);
+}
+.combo-btn:hover{border-color:var(--teal);background:var(--card-hover);color:var(--ink-bright)}
+.combo-btn.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal);box-shadow:0 0 8px var(--teal-glow)}
+.badge-combo{
+  display:inline-block;font-family:var(--font-mono);font-size:9.5px;font-weight:850;
+  letter-spacing:.04em;padding:1px 5px;border-radius:4px;background:rgba(255,255,255,0.08);
+  margin-right:4px;vertical-align:middle;line-height:1.2;
+}
+.chip-glyph{
+  display:inline-block;margin-right:4px;font-size:9.5px;line-height:1;vertical-align:middle;
+}
+.chip-badge{
+  display:inline-block;margin-right:5px;font-size:9.5px;font-weight:900;
+  font-family:var(--font-mono);letter-spacing:0.04em;line-height:1;vertical-align:middle;
+}
+
+/* Featured Hero Quant Alpha Button */
+.combo-btn[data-combo="alpha"]{
+  background:linear-gradient(135deg,rgba(168,85,247,0.18),rgba(6,182,212,0.14));
+  border:1px solid rgba(168,85,247,0.48);
+  color:#f3e8ff;font-weight:850;
+  box-shadow:0 2px 10px rgba(168,85,247,0.25);
+}
+.combo-btn[data-combo="alpha"] .badge-combo{
+  background:rgba(168,85,247,0.3);color:#f3e8ff;border:1px solid rgba(168,85,247,0.4);
+}
+.combo-btn[data-combo="alpha"]:hover{
+  border-color:rgba(168,85,247,0.8);
+  box-shadow:0 0 16px rgba(168,85,247,0.45);
+  transform:translateY(-1px);
+}
+.combo-btn[data-combo="alpha"].active{
+  background:linear-gradient(135deg,#a855f7,#7c3aed 70%,#06b6d4);
+  border-color:#c084fc;color:#fff;
+  box-shadow:0 0 18px rgba(168,85,247,0.55);
+}
+
+/* Category Filters Grid */
+.category-filters-container{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:2px}
+.category-block{
+  padding:12px 14px;background:var(--card-subtle);border:1px solid var(--line);
+  border-radius:var(--radius-md);display:flex;flex-direction:column;gap:8px;
+  box-shadow:inset 0 1px 0 var(--line-highlight);
+}
+.category-header{display:flex;align-items:center;justify-content:space-between}
+.category-title{font-size:12px;font-weight:850;color:var(--ink-bright);letter-spacing:-.01em}
+.category-badge{
+  font-size:10px;font-weight:750;color:var(--muted);padding:2px 8px;
+  border-radius:99px;background:var(--white);border:1px solid var(--line);
+  font-family:var(--font-mono);
+}
+.category-badge.has-filter{background:var(--tealbg);color:var(--teal-bright);border-color:var(--teal-border)}
+.category-chips{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;
+  border:1px solid var(--line);background:var(--white);color:var(--muted);font-size:11px;
+  font-weight:700;cursor:pointer;transition:all .18s cubic-bezier(0.16,1,0.3,1);user-select:none;
+}
+.filter-chip:hover{border-color:var(--teal);color:var(--ink-bright);background:var(--card-hover);transform:translateY(-1px)}
+.filter-chip.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal-bright);font-weight:850;box-shadow:0 0 10px var(--teal-glow)}
+
+/* Category-specific active chip colors */
+.filter-chip.chip-squeeze.active{border-color:var(--blue);background:var(--bluebg);color:var(--blue-bright);box-shadow:0 0 10px var(--blue-glow)}
+.filter-chip.chip-release.active{border-color:var(--amber);background:var(--amberbg);color:#fbbf24;box-shadow:0 0 10px rgba(245,158,11,0.25)}
+.filter-chip.chip-expand.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal-bright);box-shadow:0 0 10px var(--teal-glow)}
+.filter-chip.chip-cool.active{border-color:var(--purple);background:var(--purplebg);color:var(--purple-bright);box-shadow:0 0 10px var(--purple-glow)}
+.filter-chip.chip-bull.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal-bright);box-shadow:0 0 10px var(--teal-glow)}
+.filter-chip.chip-bear.active{border-color:var(--red);background:var(--redbg);color:#fb7185;box-shadow:0 0 10px rgba(244,63,94,0.25)}
+.filter-chip.chip-flat.active{border-color:var(--muted);background:var(--card-hover);color:var(--ink);box-shadow:0 0 0 1px var(--muted)}
+.filter-chip.chip-rsi-low.active{border-color:var(--blue);background:var(--bluebg);color:var(--blue-bright);box-shadow:0 0 10px var(--blue-glow)}
+.filter-chip.chip-rsi-mid.active{border-color:var(--muted);background:var(--card-hover);color:var(--ink);box-shadow:0 0 0 1px var(--muted)}
+.filter-chip.chip-rsi-high.active{border-color:var(--amber);background:var(--amberbg);color:#fbbf24;box-shadow:0 0 10px rgba(245,158,11,0.25)}
+.filter-chip.chip-spot-yes.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal-bright);box-shadow:0 0 10px var(--teal-glow)}
+.filter-chip.chip-spot-no.active{border-color:var(--muted);background:var(--card-hover);color:var(--ink);box-shadow:0 0 0 1px var(--muted)}
+.filter-chip.chip-tier-s.active{border-color:var(--purple);background:var(--purplebg);color:var(--purple-bright);box-shadow:0 0 12px var(--purple-glow)}
+.filter-chip.chip-tier-a.active{border-color:var(--teal);background:var(--tealbg);color:var(--teal-bright);box-shadow:0 0 12px var(--teal-glow)}
+.filter-chip.chip-tier-b.active{border-color:var(--amber);background:var(--amberbg);color:#fbbf24;box-shadow:0 0 10px rgba(245,158,11,0.25)}
+.filter-chip.chip-tier-c.active{border-color:var(--muted);background:var(--card-hover);color:var(--ink);box-shadow:0 0 0 1px var(--muted)}
+
+/* Advanced Numeric Thresholds */
+.advanced-filters{margin-top:12px;padding:14px 16px;border-radius:var(--radius-md);background:var(--card-subtle);border:1px solid var(--line)}
+.advanced-filters[hidden]{display:none!important}
+.advanced-filters-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:11px;font-weight:800;color:var(--muted)}
+.advanced-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+
+/* Metrics Cards */
+.metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px;margin-bottom:14px}
+.metric{
+  padding:14px 16px;min-height:96px;background:var(--white);border-radius:var(--radius-md);
+  border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 var(--line-highlight);
+  transition:border-color .18s;
+}
+.metric:hover{border-color:rgba(255,255,255,0.12)}
+.metric-label{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.metric-value{font-size:26px;line-height:1.15;margin:4px 0 2px;font-weight:900;letter-spacing:-.03em;color:var(--ink-bright);font-family:var(--font-mono)}
+.metric-note{color:var(--muted);font-size:10px}
+.coverage{padding:10px 16px;margin-bottom:14px;display:flex;align-items:center;gap:12px;color:var(--muted);font-size:11px}
+.coverage-track{height:8px;background:var(--navy2);border-radius:99px;flex:1;overflow:hidden;border:1px solid var(--line)}
+.coverage-track span{display:block;height:100%;background:linear-gradient(90deg,#06b6d4,#10b981);border-radius:99px;transition:width .25s ease;box-shadow:0 0 8px var(--teal-glow)}
+
+/* Workspace Layout: Full-Width Master Screener & Studio */
+.workspace{display:flex;flex-direction:column;gap:24px;align-items:stretch;width:100%}
+.scanner{width:100%;min-width:0}
+.table-wrap{overflow:auto;max-width:100%;background:var(--white);border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+.table-wrap:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.scanner .table-wrap{max-height:480px;border-top:1px solid var(--line)}
+.scanner table{width:100%;min-width:1040px}
+.research-table,.strategy-table{min-width:940px}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+th{
+  position:sticky;top:0;z-index:2;
+  background:rgba(18,26,44,0.94);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  color:var(--muted);text-align:left;font-size:10px;font-weight:850;
+  letter-spacing:.05em;padding:11px 10px;border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle;color:var(--ink)}
+tbody tr{transition:background .15s ease}
+tbody tr:hover{background:rgba(255,255,255,0.025)}
+tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(--teal)}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;font-family:var(--font-mono)}
+.rank{color:var(--muted);font-variant-numeric:tabular-nums;width:40px;font-family:var(--font-mono)}
+.coin-select{display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:0;background:transparent;padding:0;text-align:left;color:var(--ink);min-width:95px}
+.coin-select strong{font-size:12px;font-weight:800;color:var(--ink-bright)}
+.coin-select span{font-size:10px;color:var(--muted);font-weight:450}
+.coin-select.compact{min-width:78px}
+.pair{font-size:10px;white-space:nowrap}
+.pair.yes{color:var(--teal-bright);font-weight:750;display:inline-flex;align-items:center;gap:3px}
+.pair.no{color:var(--muted)}
+.ext-link{
+  display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;
+  border-radius:4px;background:var(--card-subtle);color:var(--muted);font-size:10px;
+  text-decoration:none;transition:all .18s;
+}
+.ext-link:hover{color:var(--teal);background:var(--card-hover)}
+.weight-cell{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.weight-bar-bg{width:46px;height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+.weight-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:99px}
+.diff-val.pos{color:var(--teal-bright);font-weight:750}
+.diff-val.neg{color:var(--blue-bright);font-weight:750}
+.diff-val.zero{color:var(--muted)}
+.rsi-val.high{color:#fbbf24;font-weight:800}
+.rsi-val.low{color:var(--blue-bright);font-weight:800}
+.rsi-val.mid{color:var(--ink)}
+
+/* Phase & Momentum Badges */
+.phase{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:99px;font-size:10px;font-weight:800;white-space:nowrap}
+.phase-release{background:var(--amberbg);color:#fbbf24;border:1px solid var(--amber-border)}
+.phase-expand{background:var(--tealbg);color:var(--teal-bright);border:1px solid var(--teal-border)}
+.phase-squeeze{background:var(--bluebg);color:var(--blue-bright);border:1px solid var(--blue-border)}
+.phase-cool{background:var(--purplebg);color:var(--purple-bright);border:1px solid var(--purple-border)}
+.phase-na{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.phase-bull{background:var(--tealbg);color:var(--teal-bright);border:1px solid var(--teal-border)}
+.phase-bear{background:var(--redbg);color:#fb7185;border:1px solid var(--red-border)}
+.phase-flat{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.phase-arrow{font-size:8px;line-height:1}
+.empty{padding:26px!important;color:var(--muted);text-align:center}
+.error{color:var(--red)!important}
+
+/* Quant Score Badges & Tiers */
+.score-cell{white-space:nowrap}
+.score-badge-wrap{display:inline-flex;align-items:center;gap:8px}
+.score-grade{
+  display:inline-grid;place-items:center;width:24px;height:24px;border-radius:6px;
+  font-size:11.5px;font-weight:900;text-transform:uppercase;line-height:1;
+}
+.score-grade.grade-s{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;box-shadow:0 0 12px rgba(168,85,247,0.45)}
+.score-grade.grade-a{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 0 10px rgba(16,185,129,0.35)}
+.score-grade.grade-b{background:rgba(245,158,11,0.2);color:#fbbf24;border:1px solid var(--amber-border)}
+.score-grade.grade-c{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.score-grade.grade-na{background:var(--card-subtle);color:var(--muted);border:1px dashed var(--line)}
+.score-num-group{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.score-val{font-size:12.5px;font-weight:850;font-family:var(--font-mono);line-height:1;color:var(--ink-bright)}
+.score-bar-bg{width:100%;min-width:44px;height:4px;background:var(--line);border-radius:99px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:99px}
+.score-bar-fill.fill-s{background:linear-gradient(90deg,#a855f7,#06b6d4)}
+.score-bar-fill.fill-a{background:linear-gradient(90deg,#10b981,#06b6d4)}
+.score-bar-fill.fill-b{background:var(--amber)}
+.score-bar-fill.fill-c{background:var(--muted)}
+
+/* Signal Action Tags */
+.score-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:850;white-space:nowrap;letter-spacing:.03em;line-height:1.2}
+.tag-alpha-buy{background:linear-gradient(135deg,rgba(168,85,247,0.32),rgba(6,182,212,0.25));color:#f3e8ff;border:1px solid rgba(168,85,247,0.55);box-shadow:0 0 8px rgba(168,85,247,0.35)}
+.tag-prime-coil{background:linear-gradient(135deg,rgba(6,182,212,0.28),rgba(16,185,129,0.22));color:#cffafe;border:1px solid rgba(6,182,212,0.45);box-shadow:0 0 8px rgba(6,182,212,0.25)}
+.tag-coil-a{background:var(--tealbg);color:var(--teal-bright);border:1px solid var(--teal-border)}
+.tag-expanding{background:var(--bluebg);color:var(--blue-bright);border:1px solid var(--blue-border)}
+.tag-watchlist{background:var(--amberbg);color:#fbbf24;border:1px solid var(--amber-border)}
+.tag-bear-trap{background:var(--redbg);color:#fb7185;border:1px solid var(--red-border);box-shadow:0 0 6px rgba(244,63,94,0.3)}
+.tag-neutral{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+
+/* Selected Coin Score Card */
+.selected-score-card{
+  background:linear-gradient(135deg,rgba(168,85,247,0.09),rgba(6,182,212,0.06));
+  border:1px solid rgba(168,85,247,0.28);border-radius:var(--radius-lg);
+  padding:14px 16px;margin:14px 0;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.score-card-main{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.score-card-badge{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:19px;font-weight:900}
+.score-card-badge.grade-s{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;box-shadow:0 0 16px rgba(168,85,247,0.5)}
+.score-card-badge.grade-a{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 0 12px rgba(16,185,129,0.4)}
+.score-card-badge.grade-b{background:var(--amberbg);color:#fbbf24;border:1px solid var(--amber-border)}
+.score-card-badge.grade-c{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.score-card-title{font-size:13.5px;font-weight:800;color:var(--ink-bright)}
+.score-card-title b{font-size:19px;color:var(--teal-bright);font-family:var(--font-mono)}
+.score-card-grade{font-size:11px;color:var(--muted);font-weight:600}
+.score-card-pillars{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;border-top:1px dashed var(--line);padding-top:10px}
+.pillar-mini{
+  background:var(--card-subtle);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:8px 9px;text-align:left;
+  transition:all .18s;
+}
+.pillar-mini:hover{border-color:rgba(255,255,255,0.12);background:var(--card-hover)}
+.pillar-mini span{font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:800;letter-spacing:.04em;display:block}
+.pillar-mini b{font-size:13px;color:var(--ink-bright);display:block;margin:2px 0 1px;font-family:var(--font-mono)}
+.pillar-mini small{font-size:9.5px;color:var(--muted);line-height:1.2;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.beginner-advice{
+  margin-top:12px;padding:11px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.5;
+  box-shadow:0 2px 8px rgba(0,0,0,0.25);
+}
+.beginner-advice b{font-weight:850}
+.beginner-advice.advice-buy{background:rgba(16,185,129,0.14);color:var(--teal-bright);border:1px solid rgba(16,185,129,0.38)}
+.beginner-advice.advice-coil{background:rgba(6,182,212,0.14);color:var(--blue-bright);border:1px solid rgba(6,182,212,0.38)}
+.beginner-advice.advice-danger{background:rgba(239,68,68,0.14);color:#fb7185;border:1px solid rgba(239,68,68,0.38)}
+.beginner-advice.advice-watch{background:rgba(245,158,11,0.14);color:#fbbf24;border:1px solid rgba(245,158,11,0.38)}
+.beginner-advice.advice-neutral{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+
+/* Beginner Playbook Banner */
+.playbook-card{
+  background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(6,182,212,0.05) 50%,rgba(168,85,247,0.05));
+  border:1px solid rgba(16,185,129,0.28);border-radius:var(--radius-lg);
+  padding:14px 18px;margin-bottom:16px;
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.playbook-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.playbook-title{font-size:13.5px;font-weight:850;color:var(--ink-bright);display:flex;align-items:center;gap:10px}
+.playbook-badge{
+  background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.2));
+  color:var(--teal-bright);border:1px solid var(--teal-border);
+  padding:3px 10px;border-radius:99px;font-size:10px;font-weight:850;letter-spacing:.02em;
+}
+.playbook-toggle-icon{font-size:10px;color:var(--muted);transition:transform .2s ease}
+.playbook-toggle-icon.collapsed{transform:rotate(-90deg)}
+.playbook-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
+.playbook-step{
+  background:var(--card-subtle);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:12px 14px;transition:all .18s cubic-bezier(0.16,1,0.3,1);
+  display:flex;flex-direction:column;gap:6px;box-shadow:inset 0 1px 0 var(--line-highlight);
+}
+.playbook-step:hover{border-color:rgba(255,255,255,0.16);transform:translateY(-1px);background:var(--card-hover)}
+.step-num{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:9.5px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;width:fit-content}
+.step-1 .step-num{background:rgba(16,185,129,0.18);color:var(--teal-bright);border:1px solid var(--teal-border)}
+.step-2 .step-num{background:rgba(6,182,212,0.18);color:var(--blue-bright);border:1px solid var(--blue-border)}
+.step-3 .step-num{background:rgba(244,63,94,0.18);color:#fb7185;border:1px solid var(--red-border)}
+.step-title{font-size:13px;font-weight:850;color:var(--ink-bright)}
+.step-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.step-desc strong,.step-desc b{color:var(--ink-bright)}
+
+/* Market Breadth Cockpit */
+.breadth-panel{
+  margin-bottom:16px;padding:16px 18px;background:var(--white);
+  border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);
+}
+.breadth-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.breadth-tag{font-size:9.5px;font-weight:900;letter-spacing:.14em;color:var(--teal-bright);text-transform:uppercase}
+.breadth-title{margin:3px 0 0;font-size:15px;font-weight:850;color:var(--ink-bright);letter-spacing:-.01em}
+.breadth-status-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 14px;border-radius:99px;font-size:11px;font-weight:800;transition:all .2s ease}
+.breadth-status-badge.risk-on{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.15));color:var(--teal-bright);border:1px solid var(--teal-border);box-shadow:0 0 12px var(--teal-glow)}
+.breadth-status-badge.neutral{background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(234,88,12,0.15));color:#fbbf24;border:1px solid var(--amber-border)}
+.breadth-status-badge.risk-off{background:linear-gradient(135deg,rgba(244,63,94,0.2),rgba(225,29,72,0.15));color:#fb7185;border:1px solid var(--red-border);box-shadow:0 0 12px rgba(244,63,94,0.25)}
+.breadth-status-badge.waiting{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.breadth-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.breadth-card{
+  background:var(--card-subtle);border:1px solid var(--line);border-radius:var(--radius-md);
+  padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:inset 0 1px 0 var(--line-highlight);transition:border-color .18s;
+}
+.breadth-card:hover{border-color:rgba(255,255,255,0.14)}
+.breadth-card-head{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.breadth-pct-display{display:flex;align-items:baseline;gap:8px;margin:6px 0 8px}
+.breadth-num{font-size:28px;font-weight:900;font-family:var(--font-mono);line-height:1;letter-spacing:-.03em}
+.breadth-num.bull{color:var(--teal-bright);text-shadow:0 0 14px var(--teal-glow)}
+.breadth-num.bear{color:#fb7185;text-shadow:0 0 14px rgba(244,63,94,0.3)}
+.breadth-num.squeeze{color:var(--blue-bright);text-shadow:0 0 14px var(--blue-glow)}
+.breadth-sub{font-size:11px;color:var(--muted);font-weight:600}
+.breadth-split-bar{height:8px;background:var(--navy2);border-radius:99px;overflow:hidden;display:flex;border:1px solid var(--line);padding:1px}
+.split-bull{height:100%;background:linear-gradient(90deg,#059669,#10b981);border-radius:99px;transition:width .3s}
+.split-bear{height:100%;background:linear-gradient(90deg,#dc2626,#f43f5e);border-radius:99px;transition:width .3s}
+.split-squeeze{height:100%;background:#06b6d4;border-radius:99px;transition:width .3s}
+.split-active{height:100%;background:#10b981;border-radius:99px;transition:width .3s}
+.split-cool{height:100%;background:#a855f7;border-radius:99px;transition:width .3s}
+.breadth-split-labels{display:flex;justify-content:space-between;font-size:10px;font-weight:750;color:var(--muted);margin-top:6px;font-family:var(--font-mono)}
+.breadth-tiers-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0 6px}
+.tier-item{text-align:center;padding:7px 4px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius-sm);transition:all .18s}
+.tier-item:hover{border-color:rgba(255,255,255,0.16);transform:translateY(-1px)}
+.tier-item .badge-s{display:inline-block;padding:2px 7px;border-radius:4px;background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-size:9.5px;font-weight:900;box-shadow:0 0 8px rgba(168,85,247,0.4)}
+.tier-item .badge-a{display:inline-block;padding:2px 7px;border-radius:4px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;font-size:9.5px;font-weight:900;box-shadow:0 0 8px rgba(16,185,129,0.3)}
+.tier-item .badge-b{display:inline-block;padding:2px 7px;border-radius:4px;background:var(--amberbg);color:#fbbf24;border:1px solid var(--amber-border);font-size:9.5px;font-weight:900}
+.tier-item .badge-c{display:inline-block;padding:2px 7px;border-radius:4px;background:var(--card-subtle);color:var(--muted);border:1px solid var(--line);font-size:9.5px;font-weight:900}
+.tier-item strong{display:block;margin:3px 0 1px;font-size:15px;color:var(--ink-bright);font-family:var(--font-mono);font-weight:850}
+.tier-item small{font-size:9px;color:var(--muted);display:block}
+.breadth-action-note{font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px}
+.breadth-filter-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:10px;border-top:1px dashed var(--line)}
+.breadth-action-label{font-size:11px;font-weight:800;color:var(--muted)}
+.breadth-filter-btn{font-size:10.5px}
+.breadth-filter-btn:hover{border-color:var(--teal);background:var(--card-hover);color:var(--ink-bright)}
+
+/* Selected Panel & Deep-Dive Studio Architecture */
+.selected-panel{min-height:360px}
+.selected-panel .empty{min-height:180px;display:grid;place-items:center}
+.studio-body{padding:20px 22px}
+
+/* Empty Studio Placeholder */
+.empty-studio-placeholder{
+  padding:44px 20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  text-align:center;
+  background:linear-gradient(180deg,rgba(16,185,129,0.02) 0%,rgba(6,182,212,0.03) 100%);
+  border:1px dashed var(--line);
+  border-radius:var(--radius-md);
+  margin:4px 0;
+}
+.empty-icon-wrap{position:relative;width:60px;height:60px;display:grid;place-items:center;margin-bottom:14px}
+.empty-radar-ping{
+  position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,rgba(6,182,212,0.3) 0%,rgba(6,182,212,0) 70%);
+  animation:ping 2.4s cubic-bezier(0,0,0.2,1) infinite;
+}
+@keyframes ping{0%{transform:scale(0.8);opacity:0.8}100%{transform:scale(1.8);opacity:0}}
+.empty-big-icon{font-size:30px;position:relative;z-index:1}
+.empty-title{font-size:16.5px;font-weight:850;color:var(--ink-bright);margin:0 0 8px;letter-spacing:-.01em}
+.empty-desc{max-width:600px;font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 18px}
+
+/* Studio Hero Bar */
+.studio-hero{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  padding:15px 18px;
+  background:linear-gradient(135deg,rgba(18,26,44,0.85) 0%,rgba(14,21,36,0.95) 100%);
+  border:1px solid var(--line);border-radius:var(--radius-md);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+  margin-bottom:16px;
+}
+.studio-hero-left{display:flex;align-items:center;gap:14px}
+.studio-avatar{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(6,182,212,0.2));
+  border:1px solid var(--teal-border);
+  color:var(--teal-bright);font-weight:900;font-size:14.5px;
+  display:grid;place-items:center;letter-spacing:-.02em;
+  box-shadow:0 0 12px var(--teal-glow);
+}
+.studio-identity{display:flex;flex-direction:column;gap:3px}
+.studio-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.studio-symbol{font-size:21px;font-weight:900;color:var(--ink-bright);letter-spacing:-.02em;line-height:1}
+.studio-pair-badge{
+  font-size:10px;font-weight:800;color:var(--teal-bright);
+  background:var(--tealbg);border:1px solid var(--teal-border);
+  padding:2px 8px;border-radius:4px;
+}
+.studio-rank-badge{
+  font-size:10px;font-weight:850;color:var(--muted);
+  background:var(--card-subtle);border:1px solid var(--line);
+  padding:2px 7px;border-radius:4px;font-family:var(--font-mono);
+}
+.studio-name-row{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted)}
+.studio-fullname{font-weight:600;color:var(--ink)}
+.studio-dot{color:var(--line-highlight)}
+.studio-weight b{color:var(--ink-bright);font-family:var(--font-mono)}
+
+.studio-hero-center{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.studio-state-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.studio-hero-right{display:flex;align-items:center;gap:14px}
+.studio-asof-meta{text-align:right;font-size:10.5px;line-height:1.3}
+.asof-label{color:var(--muted);display:block}
+.asof-val{color:var(--ink-bright);font-family:var(--font-mono);font-size:11px}
+.studio-hero-actions{display:flex;align-items:center;gap:8px}
+.btn-binance{
+  background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(234,88,12,0.18));
+  color:#fbbf24;border:1px solid var(--amber-border);
+  font-weight:800;font-size:11px;
+}
+.btn-binance:hover{background:rgba(245,158,11,0.3);color:#fef08a}
+
+/* Studio Score Stage: 2-Column Responsive Layout */
+.studio-score-stage{
+  display:grid;grid-template-columns:300px 1fr;gap:16px;
+  margin:16px 0;align-items:stretch;
+}
+.studio-scorecard-box{
+  background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(6,182,212,0.05));
+  border:1px solid rgba(168,85,247,0.3);border-radius:var(--radius-md);
+  padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.scorecard-top{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.scorecard-badge{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+  font-size:21px;font-weight:900;flex-shrink:0;
+}
+.scorecard-badge.grade-s{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;box-shadow:0 0 16px rgba(168,85,247,0.5)}
+.scorecard-badge.grade-a{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 0 14px rgba(16,185,129,0.4)}
+.scorecard-badge.grade-b{background:var(--amberbg);color:#fbbf24;border:1px solid var(--amber-border)}
+.scorecard-badge.grade-c{background:var(--card-subtle);color:var(--muted);border:1px solid var(--line)}
+.scorecard-meta{display:flex;flex-direction:column;gap:2px}
+.scorecard-total{display:flex;align-items:baseline;gap:5px}
+.score-num{font-size:30px;font-weight:900;color:var(--ink-bright);font-family:var(--font-mono);line-height:1}
+.score-denom{font-size:13px;color:var(--muted);font-weight:700}
+.scorecard-grade-label{font-size:11.5px;color:var(--muted);font-weight:650}
+.scorecard-bar-bg{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0}
+.scorecard-bar-fill{height:100%;border-radius:99px}
+.scorecard-bar-fill.fill-s{background:linear-gradient(90deg,#a855f7,#06b6d4)}
+.scorecard-bar-fill.fill-a{background:linear-gradient(90deg,#10b981,#06b6d4)}
+.scorecard-bar-fill.fill-b{background:var(--amber)}
+.scorecard-bar-fill.fill-c{background:var(--muted)}
+.scorecard-tag-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:4px}
+.scorecard-hint{font-size:10.5px;color:var(--muted);font-weight:600}
+
+/* Studio 5 Pillars Box */
+.studio-pillars-box{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;
+}
+.studio-pillar-item{
+  background:var(--card-subtle);border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:12px 14px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:inset 0 1px 0 var(--line-highlight);
+  transition:all .18s ease;
+}
+.studio-pillar-item:hover{border-color:rgba(255,255,255,0.16);transform:translateY(-1px);background:var(--card-hover)}
+.pillar-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:6px}
+.pillar-label{font-size:9px;font-weight:900;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.pillar-score{font-size:13.5px;color:var(--ink-bright);font-family:var(--font-mono);font-weight:850}
+.pillar-bar{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.pillar-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:99px}
+.pillar-reason{font-size:11px;font-weight:750;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.pillar-sub{font-size:9.5px;color:var(--muted);line-height:1.2}
+
+/* Studio Advice Banner */
+.studio-advice-container{margin:14px 0}
+.studio-advice-container .beginner-advice{margin-top:0;font-size:12px;padding:13px 18px;border-radius:var(--radius-md)}
+
+/* Studio KPIs Grid */
+.studio-kpis{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:16px 0;
+}
+.kpi-card{
+  background:var(--card-subtle);border:1px solid var(--line);
+  border-radius:var(--radius-md);padding:12px 14px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  box-shadow:inset 0 1px 0 var(--line-highlight);
+}
+.kpi-card:hover{border-color:rgba(255,255,255,0.14)}
+.kpi-label{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.kpi-val{font-size:18px;font-weight:900;color:var(--ink-bright);font-family:var(--font-mono);margin:6px 0 2px;line-height:1.1}
+.kpi-val.pos{color:var(--teal-bright)}
+.kpi-val.neg{color:var(--blue-bright)}
+.kpi-val.high{color:#fbbf24}
+.kpi-val.low{color:var(--blue-bright)}
+.kpi-sub{font-size:10px;color:var(--muted);font-weight:550;line-height:1.3}
+
+/* Studio Charts Grid (Pro 65% / 35% Grid) */
+.studio-charts-grid{
+  display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1.1fr);
+  gap:16px;margin-top:16px;align-items:start;
+}
+.studio-main-chart{min-width:0}
+.studio-main-chart .price-block{margin-top:0}
+.studio-sub-charts{min-width:0;display:flex;flex-direction:column;gap:14px}
+.studio-sub-charts .chart-block{margin:0}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+  .studio-score-stage{grid-template-columns:1fr}
+  .studio-charts-grid{grid-template-columns:1fr}
+  .studio-pillars-box{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .studio-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width: 768px) {
+  .studio-pillars-box{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio-hero{flex-direction:column;align-items:flex-start}
+  .studio-hero-right{width:100%;justify-content:space-between}
+}
+
+/* Charts */
+.chart-block{margin:15px 0}
+.chart-head{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:11px;color:var(--ink);font-weight:800}
+.chart-head span{color:var(--muted);font-size:10px;text-align:right;font-weight:normal}
+.chart{width:100%;height:auto;display:block;margin-top:6px;overflow:visible}
+.chart-grid{stroke:var(--line);stroke-width:1}
+.chart-threshold{stroke:var(--amber);stroke-width:1;stroke-dasharray:4 4}
+.chart-zero{stroke:var(--blue);stroke-width:1.2;stroke-dasharray:4 4}
+.chart-line{fill:none;stroke:var(--teal);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart-line.secondary{stroke:var(--blue);stroke-width:1.6}
+.chart-empty{height:76px;display:grid;place-items:center;color:var(--muted);font-size:11px;background:var(--card-subtle);border-radius:7px;margin-top:5px;border:1px dashed var(--line)}
+.legend{display:flex;gap:14px;color:var(--muted);font-size:10px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.legend i{display:inline-block;width:12px;height:2px;vertical-align:middle;background:var(--teal);margin-right:4px}
+.legend i.blue{background:var(--blue)}
+.legend i.amber{background:var(--amber)}
+.chart-ranges{display:flex;gap:4px;margin:8px 0 6px}
+.chart-ranges button{min-width:40px;min-height:34px;padding:4px 9px;border:1px solid var(--line);border-radius:6px;background:var(--card-subtle);color:var(--muted);font-size:10px;font-weight:800;transition:all .15s}
+.chart-ranges button[aria-pressed="true"]{border-color:var(--teal);background:var(--tealbg);color:var(--teal)}
+.ohlc-summary{min-height:24px;margin:5px 0;color:var(--ink);font-size:11px;white-space:normal;overflow-wrap:anywhere;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.price-chart-svg,.level-chart-svg{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:var(--card-subtle);touch-action:pan-y}
+.price-axis-label,.price-date-label{fill:var(--muted);font-size:9px;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.candle.up{color:var(--teal)}
+.candle.down{color:var(--red)}
+.candle-wick{stroke:currentColor;stroke-width:1.2}
+.candle-body{fill:currentColor}
+.volume-bar{fill:currentColor;opacity:.28}
+.volume-separator{stroke:var(--line);stroke-width:1}
+.last-price-line{stroke:var(--teal);stroke-width:1.2;stroke-dasharray:3 3}
+.last-price-label{fill:var(--teal);font-size:10px;font-weight:800;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.price-crosshair{display:none;stroke:var(--ink);stroke-width:.8;stroke-dasharray:3 3;pointer-events:none}
+.chart-ema12{fill:none;stroke:#06b6d4;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.chart-ema26{fill:none;stroke:#f59e0b;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.legend .candle-up-key,.legend .candle-down-key,.legend .volume-key,.legend .level-blue-key,.legend .level-amber-key{display:inline-block;width:10px;height:10px;margin-right:4px;border-radius:2px}
+.legend .candle-up-key{background:var(--teal)}
+.legend .candle-down-key{background:var(--red)}
+.legend .volume-key{background:var(--muted);opacity:.5}
+.legend .ema12-key{display:inline-block;width:12px;height:2px;background:#06b6d4;margin-right:4px;vertical-align:middle}
+.legend .ema26-key{display:inline-block;width:12px;height:2px;background:#f59e0b;margin-right:4px;vertical-align:middle}
+.legend .level-blue-key{height:2px;border-radius:0;background:var(--blue)}
+.legend .level-amber-key{height:2px;border-radius:0;background:var(--amber)}
+.quality{background:var(--card-subtle);border-radius:7px;padding:9px 11px;color:var(--muted);font-size:10px;border:1px solid var(--line);margin-top:12px}
+.quality.warn{background:var(--amberbg);color:var(--amber);border-color:var(--amber-border)}
+.text-link{color:var(--teal);font-size:11px;text-decoration:none;font-weight:750}
+.text-link:hover{text-decoration:underline}
+.method-note{margin:12px 0 0;padding:12px 14px;border-left:3px solid var(--teal);background:var(--card-subtle);color:var(--ink);font-size:11px;border-radius:0 8px 8px 0}
+.tip{position:relative;display:inline-grid;place-items:center;width:16px;height:16px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--card-subtle);color:var(--muted);font-size:9.5px;font-weight:800;line-height:1;transition:all .15s}
+.tip:hover{border-color:var(--teal);color:var(--teal)}
+.tip::after{display:none!important}
+
+/* Floating Tooltip */
+.floating-tooltip{position:fixed;z-index:20000;width:min(320px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;padding:10px 13px;border:1px solid var(--line);border-radius:9px;background:var(--navy2);color:var(--ink);font-size:12px;line-height:1.5;font-weight:500;box-shadow:var(--shadow-lg);pointer-events:none}
+.floating-tooltip[hidden]{display:none!important}
+
+/* Sort Buttons */
+.sort-btn{display:inline-flex;align-items:center;gap:4px;min-height:30px;padding:0;border:0;background:transparent;color:inherit;font:inherit;font-weight:850;white-space:nowrap}
+.sort-btn:hover{color:var(--teal)}
+.sort-indicator{color:var(--teal);font-size:11px}
+.scanner th[aria-sort="descending"] .sort-btn,.scanner th[aria-sort="ascending"] .sort-btn{color:var(--teal)}
+
+/* Research & Strategy Views */
+.view-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:6px 0 14px}
+.view-heading h2{margin:0;color:var(--ink);font-size:20px;letter-spacing:-.02em;font-weight:850}
+.view-heading p{margin:4px 0 0;color:var(--muted);font-size:11px}
+.horizon-control{display:flex;align-items:end;gap:8px}
+.horizon-control .field{min-width:130px}
+.research-panel{min-width:0}
+.research-body{padding:0 15px 14px}
+.table-intro{padding:12px 15px 0;color:var(--muted);font-size:11px}
+.table-foot{padding:9px 0 3px;color:var(--muted);font-size:10px;line-height:1.45}
+.research-table small,.strategy-table small{display:block;color:var(--muted);font-size:10px;font-weight:450;white-space:normal;max-width:320px}
+.rank-control{min-width:220px;margin:0}
+.rank-control select{max-width:260px}
+.level-controls{display:flex;align-items:end;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.level-controls .field{min-width:140px}
+.level-chart-wrap{margin:10px 0 12px}
+.level-price-path{fill:none;stroke:var(--teal);stroke-width:1.4}
+.level-line{stroke-width:1.5;stroke-dasharray:5 3}
+.level-line.bull{stroke:var(--blue)}
+.level-line.bear{stroke:var(--amber)}
+.level-label{fill:var(--ink);font-size:9.5px;font-weight:750;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.level-current{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:10px 0 12px;font-size:11px}
+.level-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid var(--line);border-radius:99px;background:var(--card-subtle);font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10px}
+.level-chip i{width:7px;height:7px;border-radius:50%}
+.level-chip i.blue{background:var(--blue)}
+.level-chip i.amber{background:var(--amber)}
+.strategy-controls{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}
+.strategy-controls .field{min-width:130px}
+.strategy-controls .field input{width:110px}
+.strategy-controls .note-inline{flex:1;min-width:240px;color:var(--muted);font-size:10px}
+.strategy-rule{margin:12px 16px;border:1px solid var(--line);border-radius:9px;background:var(--card-subtle)}
+.strategy-rule summary{cursor:pointer;padding:11px 14px;color:var(--ink);font-size:12px;font-weight:800}
+.strategy-rule-body{padding:0 14px 14px;color:var(--muted);font-size:11px;line-height:1.55}
+.strategy-rule-body ol{margin:4px 0 6px;padding-left:18px}
+.strategy-rule-body li{padding:3px 0}
+.split-warning{margin:0 16px 14px;padding:11px 13px;border-radius:8px;background:var(--amberbg);color:var(--amber);font-size:11px;border:1px solid var(--amber-border);line-height:1.5}
+
+/* Equity Chart */
+.equity-chart-wrap{margin:12px 0;padding:12px 14px;background:var(--card-subtle);border-radius:9px;border:1px solid var(--line)}
+.equity-chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:11px;color:var(--ink);font-weight:800}
+.equity-chart-svg{display:block;width:100%;height:auto;overflow:visible}
+
+/* Forecast View Styles */
+.forecast-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.forecast-card{padding:12px 14px;background:var(--white);border-radius:10px;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:space-between}
+.forecast-card .f-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.forecast-card .f-val{font-size:20px;font-weight:850;font-family:ui-monospace,"SF Mono",Menlo,monospace;margin:4px 0 2px;letter-spacing:-.02em}
+.forecast-card.card-upper .f-val{color:var(--teal)}
+.forecast-card.card-lower .f-val{color:var(--amber)}
+.forecast-card.card-mean .f-val{color:var(--blue)}
+.forecast-chart-box{padding:14px;background:var(--card-subtle);border-radius:10px;border:1px solid var(--line);margin-bottom:14px}
+.forecast-hud{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;font-size:11px}
+.forecast-hud-chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.f-chip{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:ui-monospace,"SF Mono",Menlo,monospace;padding:3px 8px;border-radius:6px;background:var(--white);border:1px solid var(--line);color:var(--ink)}
+.f-chip i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.f-chip i.f-upper{background:var(--teal)}
+.f-chip i.f-mean{background:#eab308}
+.f-chip i.f-lower{background:#f97316}
+.f-chip i.f-actual{background:var(--ink)}
+.forecast-chart-svg{display:block;width:100%;height:auto;overflow:visible}
+
+/* Footer */
+.footer{display:flex;justify-content:space-between;gap:12px;padding:20px 2px 0;color:var(--muted);font-size:10px;border-top:1px solid var(--line);margin-top:20px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.muted{color:var(--muted);font-size:11px}
+
+/* Responsive Media Queries */
+@media(max-width:1180px){
+  .toolbar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .workspace{grid-template-columns:1fr}
+  .scanner .table-wrap{max-height:500px}
+  .metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:960px){
+  .category-filters-container{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .shell{padding:14px 12px 32px}
+  .topbar{align-items:flex-start}
+  .brand h1{font-size:18px}
+  .topmeta{max-width:145px}
+  .tabs{overflow:auto}
+  .tabs button{white-space:nowrap;padding:8px 12px}
+  .toolbar{grid-template-columns:1fr 1fr}
+  .toolbar .field:first-child{grid-column:1/-1}
+  .toolbar .btn{width:100%}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .metric{padding:11px;min-height:84px}
+  .metric-value{font-size:21px}
+  .universe-stamp{flex-direction:column;gap:3px}
+  .statusline{align-items:flex-start;flex-direction:column;gap:4px}
+  .panel-head{padding:12px}
+  .selected-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .view-heading{align-items:flex-start;flex-direction:column}
+  .horizon-control{width:100%}
+  .strategy-controls{align-items:stretch}
+  .strategy-controls .field{flex:1}
+  .strategy-controls .field input{width:100%}
+  .strategy-controls .btn{width:100%}
+  .footer{flex-direction:column}
+  .filter-panel-head{align-items:stretch;flex-direction:column}
+  .filter-panel-actions{justify-content:space-between;align-items:flex-start;flex-direction:column}
+  .filter-summary{max-width:100%;text-align:left}
+}
+@media(max-width:420px){
+  .metrics{grid-template-columns:1fr 1fr}
+  .readonly{font-size:8px}
+  .brand{gap:9px}
+  .mark{width:38px;height:38px}
+  .selected-name{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<header class="topbar">
+  <div class="brand">
+    <div class="mark" aria-hidden="true">PT</div>
+    <div>
+      <div class="eyebrow">Local quantitative research · crypto</div>
+      <h1>Penguin Volatility Lab</h1>
+      <div class="subhead">CMC100 universe · BB–KC regime · Daily EDA · 4H RSI(diff) · candidate spot backtest</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button id="themeToggleBtn" class="theme-toggle" type="button" aria-label="สลับโหมดสว่าง/มืด" title="สลับโหมดสว่าง/มืด">
+      <svg class="theme-icon-light" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="vertical-align:middle"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      <svg class="theme-icon-dark" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="vertical-align:middle"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <span class="theme-text">ธีม</span>
+    </button>
+    <div class="topmeta">
+      <span class="readonly"><i class="dot"></i> BINANCE SPOT · READ ONLY</span>
+      <div id="syncStamp" style="margin-top:7px">กำลังเชื่อมต่อข้อมูลสาธารณะ…</div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="เมนูหลัก">
+  <button type="button" class="active" data-view="marketView" aria-controls="marketView" aria-pressed="true"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>ตลาดรวม &amp; สแกนเนอร์ (CMC100)</button>
+  <button type="button" data-view="researchView" aria-controls="researchView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>EDA · สถิติสภาวะตลาด</button>
+  <button type="button" data-view="strategyView" aria-controls="strategyView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Backtest · กลยุทธ์ Long</button>
+  <button type="button" data-view="forecastView" aria-controls="forecastView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>พยากรณ์กรอบราคา · 2SD Cone</button>
+</nav>
+
+<div class="statusline"><span id="runStatus" role="status" aria-live="polite">กำลังเตรียมข้อมูล…</span><span id="universeStamp">CMC100 · รอโหลดรายชื่อ</span></div>
+
+<div class="notice"><span aria-hidden="true">[NOTICE]</span><div><strong>อ่านผลให้ถูก:</strong> diff &gt; 0 บอกว่า BB กว้างกว่า KC ณ แท่งนั้น ไม่ได้แปลว่า volatility “กำลังจะมา” หรือบอกทิศทางราคา; หน้า EDA ทดสอบเงื่อนไขและผลลัพธ์ข้างหน้าแยกจากกลยุทธ์ ส่วน backtest เป็นเพียง candidate long-only spot ที่ระบุกติกา/ต้นทุนไว้ชัดเจน</div></div>
+
+<main>
+<section id="marketView" class="view">
+  <section class="panel toolbar" aria-label="ตัวควบคุม universe และการสแกน">
+    <div class="field"><label for="coinSearch">ค้นหาเหรียญใน CMC100</label><input id="coinSearch" type="search" placeholder="ชื่อหรือ ticker เช่น BTC, Solana" autocomplete="off"></div>
+    <div class="field" style="display:none"><label for="universeFilter">Spot coverage</label><select id="universeFilter"><option value="all">Spot: ทั้งหมด</option><option value="available">มี Binance Spot USDT</option><option value="unavailable">ไม่มีคู่ Binance Spot USDT</option></select></div>
+    <div class="field"><label for="sortBy">เรียงตาม</label><select id="sortBy"><option value="score">Quant Score (0–100)</option><option value="weight" selected>CMC weight</option><option value="phase">BB/KC state</option><option value="ema">EMA momentum spread</option><option value="diff">diff 1D</option><option value="rsi">RSI(diff)</option><option value="bars">Bars</option></select></div>
+    <div class="field"><label for="lookback">Daily history</label><select id="lookback"><option value="3">3 ปี</option><option value="5" selected>5 ปี</option><option value="all">ตั้งแต่ปี 2017*</option></select></div>
+    <button id="refreshUniverseBtn" class="btn secondary" type="button">Refresh CMC100</button>
+    <button id="scanAllBtn" class="btn primary" type="button">สแกนคู่ที่ใช้ได้</button>
+    <button id="exportBtn" class="btn secondary" type="button" disabled>Export CSV</button>
+    <div id="scanProgress" class="progress-wrap" hidden><progress id="scanProgressBar" max="100" value="0"></progress><span id="scanProgressLabel">0/0</span></div>
+  </section>
+
+  <div class="universe-stamp"><span>CMC100 คือสมาชิกดัชนีล่าสุดจาก CoinMarketCap ไม่ใช่ 100 คู่ Binance; mapping ใช้ ticker ตรงตัวและควรตรวจ token identity/alias ก่อนนำไปใช้</span><span>* ดึงข้อมูลตั้งแต่ 2017 หรือวันเริ่มมีข้อมูล สูงสุดตาม Binance Klines</span></div>
+
+  <section class="panel constituent-filter-panel" aria-label="ตัวกรองสถานะ CMC100 แยกตามหมวดหมู่">
+    <div class="filter-panel-head">
+      <div>
+        <h2 class="panel-title">Filter constituents แยกตามหมวดหมู่ (Multi-Select Categories)</h2>
+        <div class="panel-subtitle">เลือกได้มากกว่า 1 ตัวเลือกในแต่ละหมวดหมู่ (OR ภายในหมวดเดียวกัน, AND ข้ามหมวดหมู่)</div>
+      </div>
+      <div class="filter-panel-actions">
+        <span id="filterSummary" class="filter-summary">รอโหลด CMC100</span>
+        <button id="toggleAdvancedFiltersBtn" class="btn secondary btn-sm" type="button" aria-expanded="false" aria-controls="advancedFilters">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>ช่วงตัวเลขละเอียด
+        </button>
+        <button id="clearFiltersBtn" class="btn secondary" type="button">ล้างตัวกรองทั้งหมด</button>
+      </div>
+    </div>
+
+    <!-- Quick Combos (สูตรผสมด่วน) -->
+    <div class="quick-combos-row">
+      <span class="combos-label">สูตรผสมด่วน:</span>
+      <div class="combos-list" id="combosList">
+        <button type="button" class="combo-btn active" data-combo="all">ล้างทุกหมวด (100)</button>
+        <button type="button" class="combo-btn" data-combo="alpha"><span class="badge-combo">[ALPHA]</span> สูตรสแกน Quant Alpha (Top S/A)</button>
+        <button type="button" class="combo-btn" data-combo="prime"><span class="badge-combo">[PRIME]</span> เกรด S/A คุณภาพสูงสุด</button>
+        <button type="button" class="combo-btn" data-combo="marketBreadthLead"><span class="badge-combo">[LEADERS]</span> ชนะตลาด (S/A + Bull + Spot)</button>
+        <button type="button" class="combo-btn" data-combo="squeeze"><span class="badge-combo">[SQUEEZE]</span> Squeeze ล้วน</button>
+        <button type="button" class="combo-btn" data-combo="release"><span class="badge-combo">[RELEASE]</span> Fresh Release ล้วน</button>
+        <button type="button" class="combo-btn" data-combo="activeExp"><span class="badge-combo">[EXPAND]</span> Release + ขยายต่อ</button>
+        <button type="button" class="combo-btn" data-combo="squeezeBull"><span class="badge-combo">[SQUEEZE+BULL]</span> Squeeze + EMA Bull</button>
+        <button type="button" class="combo-btn" data-combo="bullExp"><span class="badge-combo">[BULL+EXP]</span> Bull + ขยายตัว</button>
+        <button type="button" class="combo-btn" data-combo="extremes"><span class="badge-combo">[MOMENTUM]</span> RSI สวิงจัด (&lt;30 หรือ &gt;70)</button>
+      </div>
+    </div>
+
+    <!-- 4 Distinct Category Filter Blocks -->
+    <div class="category-filters-container">
+      
+      <!-- หมวด 1: BB/KC Daily -->
+      <div class="category-block" data-category="bbkc">
+        <div class="category-header">
+          <span class="category-title">1. สถานะ BB/KC (Daily)</span>
+          <span class="category-badge" id="badge-bbkc">ทั้งหมด</span>
+        </div>
+        <div class="category-chips" id="chips-bbkc">
+          <button type="button" class="filter-chip active" data-cat="bbkc" data-val="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip chip-squeeze" data-cat="bbkc" data-val="squeeze"><span class="chip-glyph">●</span> บีบตัว (diff ≤ 0)</button>
+          <button type="button" class="filter-chip chip-release" data-cat="bbkc" data-val="release"><span class="chip-glyph">▲</span> Fresh Release (ข้าม 0)</button>
+          <button type="button" class="filter-chip chip-expand" data-cat="bbkc" data-val="expand"><span class="chip-glyph">▲</span> ขยายต่อ (Expanding)</button>
+          <button type="button" class="filter-chip chip-cool" data-cat="bbkc" data-val="cool"><span class="chip-glyph">▼</span> เริ่มชะลอ (Cooling)</button>
+          <button type="button" class="filter-chip chip-na" data-cat="bbkc" data-val="na"><span class="chip-glyph">○</span> รอสแกน</button>
+        </div>
+      </div>
+
+      <!-- หมวด 2: EMA Momentum Daily -->
+      <div class="category-block" data-category="ema">
+        <div class="category-header">
+          <span class="category-title">2. EMA Momentum (Daily)</span>
+          <span class="category-badge" id="badge-ema">ทั้งหมด</span>
+        </div>
+        <div class="category-chips" id="chips-ema">
+          <button type="button" class="filter-chip active" data-cat="ema" data-val="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip chip-bull" data-cat="ema" data-val="bull"><span class="chip-glyph">▲</span> บวก (EMA12 &gt; 26)</button>
+          <button type="button" class="filter-chip chip-bear" data-cat="ema" data-val="bear"><span class="chip-glyph">▼</span> ลบ (EMA12 &lt; 26)</button>
+          <button type="button" class="filter-chip chip-flat" data-cat="ema" data-val="flat"><span class="chip-glyph">—</span> เป็นกลาง (เท่ากัน)</button>
+          <button type="button" class="filter-chip chip-na" data-cat="ema" data-val="na"><span class="chip-glyph">○</span> รอสแกน</button>
+        </div>
+      </div>
+
+      <!-- หมวด 3: RSI(diff) Daily -->
+      <div class="category-block" data-category="rsi">
+        <div class="category-header">
+          <span class="category-title">3. RSI(diff) (Daily)</span>
+          <span class="category-badge" id="badge-rsi">ทั้งหมด</span>
+        </div>
+        <div class="category-chips" id="chips-rsi">
+          <button type="button" class="filter-chip active" data-cat="rsi" data-val="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip chip-rsi-low" data-cat="rsi" data-val="low"><span class="chip-glyph">▼</span> ต่ำกว่า 30 (&lt;30)</button>
+          <button type="button" class="filter-chip chip-rsi-mid" data-cat="rsi" data-val="middle"><span class="chip-glyph">●</span> ปกติ (30–70)</button>
+          <button type="button" class="filter-chip chip-rsi-high" data-cat="rsi" data-val="high"><span class="chip-glyph">▲</span> สูงกว่า 70 (&gt;70)</button>
+          <button type="button" class="filter-chip chip-na" data-cat="rsi" data-val="na"><span class="chip-glyph">○</span> รอสแกน</button>
+        </div>
+      </div>
+
+      <!-- หมวด 4: Binance Spot Coverage -->
+      <div class="category-block" data-category="spot">
+        <div class="category-header">
+          <span class="category-title">4. Binance Spot Coverage</span>
+          <span class="category-badge" id="badge-spot">ทั้งหมด</span>
+        </div>
+        <div class="category-chips" id="chips-spot">
+          <button type="button" class="filter-chip active" data-cat="spot" data-val="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip chip-spot-yes" data-cat="spot" data-val="available"><span class="chip-badge">[YES]</span> มีคู่ Binance Spot USDT</button>
+          <button type="button" class="filter-chip chip-spot-no" data-cat="spot" data-val="unavailable"><span class="chip-badge">[NO]</span> ไม่มีคู่ Spot USDT</button>
+        </div>
+      </div>
+
+      <!-- หมวด 5: Quant Score Tier -->
+      <div class="category-block" data-category="tier" style="grid-column: 1 / -1;">
+        <div class="category-header">
+          <span class="category-title">5. เกรดคะแนนควอนท์ (Quant Composite Score Tier)</span>
+          <span class="category-badge" id="badge-tier">ทั้งหมด</span>
+        </div>
+        <div class="category-chips" id="chips-tier">
+          <button type="button" class="filter-chip active" data-cat="tier" data-val="all">ทั้งหมด</button>
+          <button type="button" class="filter-chip chip-tier-s" data-cat="tier" data-val="S"><span class="chip-badge">[S]</span> เกรด S (Prime 85–100)</button>
+          <button type="button" class="filter-chip chip-tier-a" data-cat="tier" data-val="A"><span class="chip-badge">[A]</span> เกรด A (High 70–84)</button>
+          <button type="button" class="filter-chip chip-tier-b" data-cat="tier" data-val="B"><span class="chip-badge">[B]</span> เกรด B (Watch 55–69)</button>
+          <button type="button" class="filter-chip chip-tier-c" data-cat="tier" data-val="C"><span class="chip-badge">[C]</span> เกรด C (&lt;55 หรือยังไม่สแกน)</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hidden compatibility elements for tests -->
+    <div style="display:none" aria-hidden="true">
+      <select id="bbkcFilter"><option value="all">all</option><option value="squeeze">squeeze</option><option value="release">release</option><option value="expand">expand</option><option value="cool">cool</option><option value="na">na</option></select>
+      <select id="emaFilter"><option value="all">all</option><option value="bull">bull</option><option value="bear">bear</option><option value="flat">flat</option><option value="na">na</option></select>
+      <select id="rsiFilter"><option value="all">all</option><option value="low">low</option><option value="middle">middle</option><option value="high">high</option><option value="na">na</option></select>
+    </div>
+
+    <!-- Advanced Numeric Thresholds Drawer -->
+    <div id="advancedFilters" class="advanced-filters" hidden>
+      <div class="advanced-filters-title">
+        <span>กำหนดช่วงตัวเลขละเอียด (Custom Numeric Thresholds)</span>
+        <button id="resetNumericFiltersBtn" class="btn-text" type="button">รีเซ็ตเฉพาะตัวเลข</button>
+      </div>
+      <div class="advanced-grid">
+        <div class="field">
+          <label for="minDiff">diff 1D ขั้นต่ำ (%)</label>
+          <input id="minDiff" type="number" step="0.1" placeholder="เช่น -2.0">
+        </div>
+        <div class="field">
+          <label for="maxDiff">diff 1D สูงสุด (%)</label>
+          <input id="maxDiff" type="number" step="0.1" placeholder="เช่น 5.0">
+        </div>
+        <div class="field">
+          <label for="minEma">EMA spread ขั้นต่ำ (%)</label>
+          <input id="minEma" type="number" step="0.1" placeholder="เช่น 0.0">
+        </div>
+        <div class="field">
+          <label for="maxEma">EMA spread สูงสุด (%)</label>
+          <input id="maxEma" type="number" step="0.1" placeholder="เช่น 10.0">
+        </div>
+        <div class="field">
+          <label for="minRsi">RSI(diff) ขั้นต่ำ (0-100)</label>
+          <input id="minRsi" type="number" min="0" max="100" step="1" placeholder="เช่น 20">
+        </div>
+        <div class="field">
+          <label for="maxRsi">RSI(diff) สูงสุด (0-100)</label>
+          <input id="maxRsi" type="number" min="0" max="100" step="1" placeholder="เช่น 80">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics" aria-label="ภาพรวม universe">
+    <div class="panel metric">
+      <div class="metric-label">สมาชิก CMC100 <button class="tip" type="button" aria-label="จำนวน constituents ล่าสุดจาก CMC100" data-tip="จำนวน constituents ล่าสุดจาก CoinMarketCap CMC100 API; รายชื่อและ weight เปลี่ยนได้เมื่อดัชนีปรับสมาชิก">i</button></div>
+      <div id="mUniverse" class="metric-value">—</div>
+      <div class="metric-note">ดัชนี exclude เหรียญที่ไม่เข้าเกณฑ์ methodology</div>
+    </div>
+    <div class="panel metric">
+      <div class="metric-label">Binance Spot coverage <button class="tip" type="button" aria-label="จำนวนคู่ Binance Spot USDT ที่จับคู่ได้" data-tip="จำนวน constituent ที่จับคู่ ticker แบบตรงตัวกับ active Binance Spot quote เป็น USDT ได้; ไม่มีคู่จะยังแสดงแต่ไม่รวมใน EDA">i</button></div>
+      <div id="mCoverage" class="metric-value">—</div>
+      <div class="metric-note">ไม่แทนข้อมูลทั้งตลาด CMC100</div>
+    </div>
+    <div class="panel metric">
+      <div class="metric-label">สแกนแล้ว <button class="tip" type="button" aria-label="จำนวนเหรียญที่ดึง Daily data สำเร็จ" data-tip="จำนวนคู่ที่ดึง Daily Klines สำเร็จในรอบนี้; scan เก็บแท่งปิดแล้วเท่านั้น">i</button></div>
+      <div id="mScanned" class="metric-value">—</div>
+      <div class="metric-note">กดสแกนเพื่อดึงข้อมูลทุกคู่ที่รองรับ</div>
+    </div>
+    <div class="panel metric">
+      <div class="metric-label">เพิ่ง Release <button class="tip" type="button" aria-label="นิยาม release" data-tip="diff ข้ามจาก ≤0 เป็น &gt;0 ระหว่างแท่ง Daily ก่อนหน้าและแท่งล่าสุดที่ปิดแล้ว; เป็นสถานะ ไม่ใช่คำทำนาย">i</button></div>
+      <div id="mRelease" class="metric-value">—</div>
+      <div class="metric-note">ข้ามศูนย์ขึ้น ณ Daily ล่าสุด</div>
+    </div>
+    <div class="panel metric">
+      <div class="metric-label">Expansion ต่อ <button class="tip" type="button" aria-label="นิยาม expansion ต่อ" data-tip="diff &gt;0 และสูงกว่าแท่งก่อนหน้า; ไม่ได้บอก volatility ในอนาคตหรือราคาขึ้นหรือลง">i</button></div>
+      <div id="mExpand" class="metric-value">—</div>
+      <div class="metric-note">จำนวนในคู่ที่สแกนแล้ว</div>
+    </div>
+  </section>
+
+  <div class="panel coverage"><span id="coverageText">ยังไม่มีผลสแกน</span><div class="coverage-track" aria-hidden="true"><span id="coverageBar" style="width:0%"></span></div><span>ข้อมูลจริง / active USDT pairs</span></div>
+
+  <!-- Market Breadth & Macro Regime Cockpit -->
+  <section class="panel breadth-panel" id="marketBreadthPanel" aria-label="Market Breadth & Macro Filter">
+    <div class="breadth-header">
+      <div class="breadth-title-group">
+        <div class="breadth-tag">MACRO BREADTH FILTER</div>
+        <h3 class="breadth-title">สภาวะตลาดรวม (Market Breadth) · เครื่องมือกักกรองความเสี่ยงภาพใหญ่</h3>
+      </div>
+      <div class="breadth-status-badge waiting" id="breadthRegimeBadge">
+        <span class="dot"></span>
+        <span id="breadthRegimeText">รอผลสแกนตลาด (กด 'สแกนคู่ที่ใช้ได้')</span>
+      </div>
+    </div>
+
+    <div class="breadth-grid">
+      <!-- Card 1: Trend Momentum Breadth (Bull vs Bear) -->
+      <div class="breadth-card">
+        <div class="breadth-card-head">
+          <span>โมเมนตัมทิศทาง (Trend Breadth)</span>
+          <button class="tip" type="button" aria-label="สัดส่วน EMA Bull" data-tip="เปอร์เซ็นต์ของเหรียญที่ EMA12 &gt; EMA26; เกิน 55% บ่งชี้ตลาดกระทิงหนุน Breakout ได้ผลดี">i</button>
+        </div>
+        <div class="breadth-card-main">
+          <div class="breadth-pct-display">
+            <span class="breadth-num bull" id="breadthBullPct">—%</span>
+            <span class="breadth-sub">EMA Bull (12 &gt; 26)</span>
+          </div>
+          <div class="breadth-split-bar">
+            <div class="split-bull" id="splitBullBar" style="width:50%" title="Bull"></div>
+            <div class="split-bear" id="splitBearBar" style="width:50%" title="Bear"></div>
+          </div>
+          <div class="breadth-split-labels">
+            <span id="breadthBullCount">▲ Bull: —</span>
+            <span id="breadthBearCount">▼ Bear: —</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Volatility Regime Breadth (Squeeze vs Expansion) -->
+      <div class="breadth-card">
+        <div class="breadth-card-head">
+          <span>วัฏจักรพลังงาน (Volatility Breadth)</span>
+          <button class="tip" type="button" aria-label="สัดส่วน Squeeze และ Expansion" data-tip="บีบตัว (Squeeze) สะสมพลัง เทียบกับ ระเบิดตัว (Release &amp; Expand)">i</button>
+        </div>
+        <div class="breadth-card-main">
+          <div class="breadth-pct-display">
+            <span class="breadth-num squeeze" id="breadthSqueezePct">—%</span>
+            <span class="breadth-sub">Squeeze (สะสมพลัง)</span>
+          </div>
+          <div class="breadth-split-bar">
+            <div class="split-squeeze" id="splitSqueezeBar" style="width:34%" title="Squeeze"></div>
+            <div class="split-active" id="splitActiveBar" style="width:33%" title="Active Expansion"></div>
+            <div class="split-cool" id="splitCoolBar" style="width:33%" title="Cooling"></div>
+          </div>
+          <div class="breadth-split-labels">
+            <span id="breadthSqueezeCount">● Squeeze: —</span>
+            <span id="breadthActiveCount">▲ Active: —</span>
+            <span id="breadthCoolCount">▼ Cool: —</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Quality Tier Distribution -->
+      <div class="breadth-card">
+        <div class="breadth-card-head">
+          <span>การกระจายคะแนน (Score Tiers)</span>
+          <button class="tip" type="button" aria-label="เกรดเหรียญตามคะแนนรวม" data-tip="การกระจายเกรด S, A, B, C ในเหรียญที่สแกนแล้วทั้งหมด">i</button>
+        </div>
+        <div class="breadth-card-main">
+          <div class="breadth-tiers-row">
+            <div class="tier-item"><span class="badge-s">S</span><strong id="tierCountS">0</strong><small>Prime</small></div>
+            <div class="tier-item"><span class="badge-a">A</span><strong id="tierCountA">0</strong><small>High</small></div>
+            <div class="tier-item"><span class="badge-b">B</span><strong id="tierCountB">0</strong><small>Watch</small></div>
+            <div class="tier-item"><span class="badge-c">C</span><strong id="tierCountC">0</strong><small>Avoid</small></div>
+          </div>
+          <div class="breadth-action-note" id="breadthActionNote">
+            กดสแกนคู่ที่ใช้ได้เพื่อประเมิน Market Breadth และ Quant Score ครบทุกคู่
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadth Quick Action Filter Bar -->
+    <div class="breadth-filter-actions">
+      <span class="breadth-action-label">ตัวกรองสอดคล้อง Breadth:</span>
+      <button type="button" class="btn btn-sm secondary breadth-filter-btn" id="filterBreadthBestBtn">
+        <span class="badge-combo">[LEADERS]</span> เหรียญเกรดสูงหนุนตลาด (Grade S &amp; A + Bull)
+      </button>
+      <button type="button" class="btn btn-sm secondary breadth-filter-btn" id="filterBreadthSqueezeBtn">
+        <span class="badge-combo">[COIL]</span> สะสมพลังรอระเบิด (Squeeze + เกรด A ขึ้นไป)
+      </button>
+      <button type="button" class="btn btn-sm secondary breadth-filter-btn" id="filterBreadthLeadersBtn">
+        <span class="badge-combo">[ALPHA]</span> สวนกระแสตลาด (EMA Bull แข็งแกร่ง + diff &gt; 0)
+      </button>
+    </div>
+  </section>
+
+  <!-- Beginner Playbook: 3 Steps to Trade -->
+  <section class="playbook-card" id="beginnerPlaybook">
+    <div class="playbook-head" id="togglePlaybookBtn">
+      <div class="playbook-title">
+        <span>คู่มือสำหรับคนทั่วไป &amp; มือใหม่: จะซื้อเมื่อไหร่ · ถือนานแค่ไหน · ขายทันทีตอนไหน</span>
+        <span class="playbook-badge">3 สเต็ปเข้าใจง่าย</span>
+      </div>
+      <span class="playbook-toggle-icon" id="playbookToggleIcon">▼</span>
+    </div>
+    <div class="playbook-grid" id="playbookContent">
+      <div class="playbook-step step-1">
+        <span class="step-num">Step 1 · Entry</span>
+        <div class="step-title">เกณฑ์จังหวะเข้าซื้อ (Entry Setup)</div>
+        <div class="step-desc">
+          • ตรวจสอบสัญญาณ <b>Market Breadth</b> หากเป็น <b>[Risk-On]</b> ตลาดพร้อมรับแรงส่งโมเมนตัม<br>
+          • กดปุ่ม <b>"สูตรสแกน Quant Alpha"</b> เพื่อกรองเฉพาะเหรียญเกรด <b>S / A</b> ที่มีสภาพคล่อง Spot<br>
+          • <b>สาย Momentum:</b> โฟกัสเหรียญที่มีแท็ก <b>[ALPHA BUY]</b> หรือ <b>[EXPANDING]</b> (เพิ่งเบรกเอาต์ 40 วัน)<br>
+          • <b>สาย Accumulate:</b> ดักเก็บเหรียญที่มีแท็ก <b>[PRIME COIL]</b> (บีบอัดตัวลึกในกรอบแนวรับ ยืนเหนือ SMA20)
+        </div>
+      </div>
+      <div class="playbook-step step-2">
+        <span class="step-num">Step 2 · Duration</span>
+        <div class="step-title">ระยะเวลาถือครอง (Holding Period)</div>
+        <div class="step-desc">
+          • สถิติประวัติศาสตร์ชี้ว่ารอบโมเมนตัมคงอยู่เฉลี่ย <b>13.4 วัน (~2 สัปดาห์)</b><br>
+          • <b>Day 1–7 (Sweet Spot):</b> ช่วงเร่งกำลังสูงสุด ให้ถือรันเทรนด์เต็มพอร์ต (Let Profit Run)<br>
+          • <b>Day 8–13 (Partial Take Profit):</b> ทยอยล็อกกำไร 50% เพื่อลดความเสี่ยงความผันผวนกลับทิศ<br>
+          • <b>หลัง Day 13 (Exhaustion Risk):</b> พลังงานเริ่มหมดรอบ ไม่ควรไล่ซื้อเพิ่ม
+        </div>
+      </div>
+      <div class="playbook-step step-3">
+        <span class="step-num">Step 3 · Exit</span>
+        <div class="step-title">จุดตัดขาดทุนและทางหนี (Risk Control)</div>
+        <div class="step-desc">
+          • <b>Cut-loss ทันที:</b> เมื่อราคาปิดแท่งวันหลุดต่ำกว่า <b>เส้น SMA20</b> (ตัดขาดทุนสั้น 2–4%)<br>
+          • <b>สัญญาณเตือน:</b> ตรวจพบแท็ก <b>[BEAR TRAP]</b> หรือสถานะเปลี่ยนเป็น <b>[Cooling / เริ่มชะลอ]</b><br>
+          • <b>ตลาดภาพรวมเปลี่ยนทิศ:</b> สัญญาณภาพรวมเปลี่ยนเป็น <b>[Risk-Off]</b> ให้ลดสถานะทันที
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workspace" id="mainWorkspace">
+    <section class="panel scanner" id="scannerSection" aria-label="รายชื่อและสถานะเหรียญ CMC100">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">ตารางสแกนเนอร์เหรียญ CMC100 (Full-Width Market Screener)</h2>
+          <div class="panel-subtitle">คลิกที่แถวเหรียญเพื่อเปิด "ห้องวิเคราะห์เจาะลึกเต็มจอ (Deep-Dive Studio)" ด้านล่าง · เรียงตาม CMC weight หรือ Quant Score</div>
+        </div>
+        <span class="micro-label">100 constituents · Binance Spot</span>
+      </div>
+      <div class="table-wrap" tabindex="0" role="region" aria-label="ตารางสมาชิก CMC100 เลื่อนเพื่อดูครบทุกเหรียญ">
+        <table>
+          <thead>
+            <tr>
+              <th>Rank <button class="tip" type="button" aria-label="อันดับตามน้ำหนัก CMC100" data-tip="ลำดับตามน้ำหนัก CMC100 ล่าสุด; ไม่ใช่อันดับย้อนหลัง">i</button></th>
+              <th>เหรียญ</th>
+              <th data-sort="score"><button class="sort-btn" type="button" data-sort="score" data-label="Quant Composite Score">Quant Score <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="คะแนน Quant รวม" data-tip="คะแนนความพร้อม 0-100 (5 เสาหลัก: Regime 30, Momentum 25, EDA Lift 20, Structure 15, Quality 10) · เกรด S, A, B, C">i</button></th>
+              <th class="num" data-sort="weight"><button class="sort-btn" type="button" data-sort="weight" data-label="CMC weight">CMC weight <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="ความหมาย CMC100 weight" data-tip="น้ำหนัก constituent ล่าสุด ไม่ใช่ขนาด position และห้ามนำ weight ปัจจุบันไปถ่วงผลย้อนหลัง">i</button></th>
+              <th>Binance Spot USDT</th>
+              <th>BB/KC 1D <button class="tip" type="button" aria-label="สถานะ BB/KC Daily" data-tip="สถานะ Daily จาก BB–KC diff ที่ปิดแล้ว: compression, release, expansion ต่อ หรือ cooling">i</button></th>
+              <th data-sort="ema"><button class="sort-btn" type="button" data-sort="ema" data-label="EMA momentum spread">EMA momentum <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="EMA momentum definition" data-tip="สถานะแยกจาก BB/KC: EMA12 close เทียบ EMA26 close; spread มากไปน้อย sort ได้">i</button></th>
+              <th class="num" data-sort="diff"><button class="sort-btn" type="button" data-sort="diff" data-label="diff 1D">diff 1D <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="สูตร diff" data-tip="(upperBB−upperKC)/upperKC×100; SMA20, population stdev20, Wilder ATR20">i</button></th>
+              <th class="num" data-sort="rsi"><button class="sort-btn" type="button" data-sort="rsi" data-label="RSI(diff)">RSI(diff) <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="RSI ของ diff" data-tip="Wilder RSI14 ของ diff; ไม่ใช่ RSI ราคา">i</button></th>
+              <th class="num" data-sort="bars"><button class="sort-btn" type="button" data-sort="bars" data-label="Bars">Bars <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="จำนวนแท่ง" data-tip="จำนวนแท่ง Daily ที่โหลดสำเร็จของเหรียญนั้น">i</button></th>
+            </tr>
+          </thead>
+          <tbody id="coinRows"><tr><td colspan="10" class="empty">กำลังโหลดรายชื่อ CMC100…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel selected-panel studio-panel" id="selectedPanelSection" aria-label="ห้องวิเคราะห์เจาะลึกเหรียญที่เลือก">
+      <div class="panel-head">
+        <div>
+          <h2 class="panel-title">ห้องวิเคราะห์เจาะลึกเหรียญที่เลือก (Selected Coin Analysis Studio)</h2>
+          <div class="panel-subtitle">กราฟ Candlestick เต็มตา + 5 เสาหลัก Quant Score + คำแนะนำมือใหม่ + สถิติความผันผวน</div>
+        </div>
+        <button type="button" class="btn btn-sm secondary" id="scrollToTableBtn">↑ กลับไปตารางสแกนเนอร์</button>
+      </div>
+      <div id="selectedPanel" class="detail-body studio-body">
+        <div class="empty-studio-placeholder">
+          <div class="empty-icon-wrap"><div class="empty-radar-ping"></div><svg class="empty-big-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-400)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+          <h3 class="empty-title">คลิกเลือกเหรียญจากตารางสแกนเนอร์ด้านบน</h3>
+          <p class="empty-desc">ระบบจะเปิด "ห้องวิเคราะห์เจาะลึกเต็มจอ (Deep-Dive Studio)" แสดงกราฟแท่งเทียน Candlestick, คะแนนความพร้อม 5 เสาหลัก (Quant Composite Score 0–100), คำแนะนำเทรดสำหรับมือใหม่ และสถิติความผันผวน 4H/Daily ทันที</p>
+          <button type="button" class="btn btn-sm primary" id="emptyScrollUpBtn">↑ เลื่อนไปดูตารางเหรียญ CMC100</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <div class="method-note"><b>Data gate:</b> รายชื่อ/weight จาก CMC100 API; ราคา/แท่งจาก Binance Spot Klines. ตัดแท่งที่ยังไม่ปิด, คำนวณแยกช่วงที่ต่อเนื่องเมื่อพบ gap, ไม่เติมราคา/แท่งที่หาย. CMC100 เป็น current constituent snapshot; ผลย้อนหลังบนสมาชิกปัจจุบันมี survivorship bias.</div>
+</section>
+
+<section id="researchView" class="view" hidden>
+  <div class="view-heading">
+    <div><h2>EDA · Conditional outcomes</h2><p>วัดว่าภายใต้เงื่อนไข ณ วัน t เกิดอะไรใน H แท่งถัดไป · แยก pooled sample กับค่าเฉลี่ยต่อเหรียญ</p></div>
+    <div class="horizon-control">
+      <div class="field"><label for="horizon">Forward horizon</label><select id="horizon"><option value="1">1 แท่ง Daily</option><option value="3">3 แท่ง Daily</option><option value="5" selected>5 แท่ง Daily</option><option value="10">10 แท่ง Daily</option></select></div>
+    </div>
+  </div>
+  <div class="notice blue"><span aria-hidden="true">ℹ</span><div><strong>คำถามที่ทดสอบ:</strong> เงื่อนไขของ Penguin Trend ช่วยแยกช่วงที่ realized volatility ในอนาคตสูงกว่าฐานย้อนหลังได้หรือไม่? ไม่ตีความ diff&gt;0 ว่าเป็นตัวพยากรณ์ก่อนเกิด volatility และไม่ใช้สีแท่ง/MACD เป็นเงื่อนไขใน EDA นี้</div></div>
+
+  <section class="panel research-panel">
+    <div class="panel-head"><div><h2 class="panel-title">Conditional outcomes · ทั้ง Binance cohort</h2><div class="panel-subtitle" id="researchCoverage">ยังไม่มีข้อมูล</div></div><span class="micro-label">ทุกตัวอย่างใช้แท่งปิดแล้ว</span></div>
+    <div class="table-intro">Pooled = รวมทุก coin-day; Equal-coin = เฉลี่ย probability ของแต่ละเหรียญที่มี ≥10 ตัวอย่าง เพื่อไม่ให้เหรียญที่มีประวัติยาวครองผลรวม</div>
+    <div class="research-body">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="ตาราง conditional outcomes ทั้ง cohort">
+        <table class="research-table">
+          <thead>
+            <tr>
+              <th>เงื่อนไข ณ วัน t <button class="tip" type="button" aria-label="นิยามเงื่อนไข" data-tip="นิยามเงื่อนไขถูกตรึงไว้ในตาราง ไม่ใช่ parameter fit เพื่อทำกำไร">i</button></th>
+              <th class="num">coin-days <button class="tip" type="button" aria-label="จำนวน coin-days" data-tip="จำนวนวัน-เหรียญที่มี H แท่งข้างหน้าและข้อมูลครบ; ตัวอย่างแต่ละวันทับซ้อนกัน">i</button></th>
+              <th class="num">Coverage <button class="tip" type="button" aria-label="จำนวนเหรียญที่มีตัวอย่าง" data-tip="จำนวนเหรียญที่มีตัวอย่าง; equal-coin mean คิดจากเหรียญที่มี ≥10 ตัวอย่าง">i</button></th>
+              <th class="num">P(RV ขยาย) <button class="tip" type="button" aria-label="นิยาม RV expansion" data-tip="RV future H = √Σ(log return²) ของ H แท่งหน้า; ขยายเมื่อสูงกว่า RV trailing 20 แท่งที่ปรับสเกลด้วย √(H/20). แสดง pooled และ equal-coin">i</button></th>
+              <th class="num">P(diff+ ต่อ) <button class="tip" type="button" aria-label="diff positive persistence" data-tip="สัดส่วนที่ diff&gt;0 อย่างน้อย ceil(60%×H) ของแท่งถัดไป; เมื่อ H=5 ต้องบวกอย่างน้อย 3 ใน 5 วัน">i</button></th>
+              <th class="num">P(diff≤0 ที่ H) <button class="tip" type="button" aria-label="diff กลับต่ำกว่าหรือเท่าศูนย์ที่ปลาย horizon" data-tip="สัดส่วนที่ diff กลับมาปิด ≤0 ณ แท่งปลาย horizon; เป็นการวัดสถานะ spread ไม่ใช่หลักฐานว่า realized volatility หมด">i</button></th>
+              <th class="num">Median RV หน้า <button class="tip" type="button" aria-label="ค่ามัธยฐาน realized volatility" data-tip="มัธยฐาน realized volatility ของ H แท่งข้างหน้า; หน่วยเป็น % จาก √Σ(log return²)">i</button></th>
+              <th class="num">P(ราคาปิดขึ้น) <button class="tip" type="button" aria-label="ผลด้านทิศทางราคา" data-tip="สัดส่วน close[t+H] &gt; close[t]; เป็นผลด้านทิศทางแยกจากการทดสอบ volatility">i</button></th>
+            </tr>
+          </thead>
+          <tbody id="aggregateRows"><tr><td colspan="8" class="empty">สแกนข้อมูลก่อน</td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-foot">Samples เป็น overlapping observations จึงไม่อิสระ; ค่า probability เป็น descriptive, ไม่มี confidence interval และไม่ใช่ความน่าจะเป็นที่รับประกัน. เหรียญใน cohort คือ CMC100 ปัจจุบันที่มีคู่ Binance เท่านั้น; survivorship / listing bias ยังอยู่.</div>
+    </div>
+  </section>
+
+  <section class="panel research-panel" style="margin-top:14px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">อันดับเหรียญจาก EDA · volatility expansion lift</h2><div class="panel-subtitle" id="edaRankCoverage">ยังไม่มีข้อมูล</div></div>
+      <div class="field rank-control"><label for="rankCondition">จัดอันดับเมื่อเกิดเงื่อนไข</label><select id="rankCondition"><option value="release" selected>BB/KC Release</option><option value="squeeze">BB/KC squeeze</option><option value="deep">Deep squeeze</option><option value="rising">diff expansion</option><option value="cooling">RSI(diff) cooling</option><option value="rsiCrossUp">RSI(diff) cross up</option><option value="rsiCrossDown">RSI(diff) cross down</option><option value="emaBull">EMA momentum บวก</option><option value="emaBear">EMA momentum ลบ</option></select></div>
+    </div>
+    <div class="research-body">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="อันดับเหรียญตามผล EDA">
+        <table class="research-table">
+          <thead>
+            <tr><th>Rank</th><th>Coin</th><th class="num">N เงื่อนไข</th><th class="num">P(RV ขยาย | condition)</th><th class="num">ฐาน P(RV ขยาย)</th><th class="num">Lift · pp</th><th class="num">P(diff+ ต่อ)</th></tr>
+          </thead>
+          <tbody id="edaRankRows"><tr><td colspan="7" class="empty">สแกนเหรียญก่อน</td></tr></tbody>
+        </table>
+      </div>
+      <div id="edaRankNote" class="table-foot">Rank = conditional expansion rate ลบ unconditional rate ของเหรียญเดียวกัน; ต้องมี ≥10 events จึงจัดอันดับได้. ใช้เป็น shortlist สำหรับศึกษาต่อ ไม่ใช่คะแนนกำไรหรือคำแนะนำซื้อขาย.</div>
+    </div>
+  </section>
+
+  <section class="panel research-panel" style="margin-top:14px">
+    <div class="panel-head">
+      <div><h2 id="selectedEventTitle" class="panel-title">Conditional outcomes · เหรียญที่เลือก</h2><div class="panel-subtitle">ใช้สูตรและเงื่อนไขเดียวกับตาราง cohort แต่คำนวณแยกเป็นรายเหรียญ</div></div>
+      <span class="micro-label" id="horizonLabel">5 แท่ง Daily</span>
+    </div>
+    <div class="research-body">
+      <div class="table-wrap">
+        <table class="research-table">
+          <thead>
+            <tr><th>เงื่อนไข ณ วัน t</th><th class="num">ตัวอย่าง</th><th class="num">P(RV ขยาย)</th><th class="num">P(diff+ ต่อ)</th><th class="num">P(diff≤0 ที่ H)</th><th class="num">Median RV หน้า</th><th class="num">P(ราคาปิดขึ้น)</th></tr>
+          </thead>
+          <tbody id="selectedEventRows"><tr><td colspan="7" class="empty">เลือกเหรียญที่มีข้อมูลจากหน้า “ตลาดรวม”</td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-foot">Deep squeeze = diff≤0 และ rolling percentile 252 วัน ≤20% (อย่างน้อย 60 ค่า); cooling = diff>0 และ RSI14(diff) ต่ำกว่า SMA7 ของ RSI. P(diff≤0 ณ H) วัดสถานะ spread ที่ปลายช่วง ไม่ได้พิสูจน์ว่า realized volatility หมด.</div>
+    </div>
+  </section>
+
+  <section class="panel research-panel" style="margin-top:14px">
+    <div class="panel-head">
+      <div><h2 class="panel-title">EDA · RSI(diff) cross-high levels</h2><div class="panel-subtitle">ตรวจการทดสอบ, ปิดทะลุ, false break และ retest จากข้อมูล Binance Spot 1H</div></div>
+      <span class="micro-label">เลือกเหรียญด้านบนก่อน</span>
+    </div>
+    <div class="level-controls">
+      <div class="field"><label for="levelLookback">ช่วงข้อมูล 1H</label><select id="levelLookback"><option value="90" selected>90 วัน</option><option value="180">180 วัน</option><option value="365">365 วัน</option></select></div>
+      <button id="loadLevelStudyBtn" class="btn primary" type="button">Run 1H level EDA</button>
+      <span id="levelStudyStatus" class="note-inline" role="status" aria-live="polite">โหลดแยกต่อเหรียญเมื่อกดปุ่ม</span>
+    </div>
+    <div id="levelStudyResults" class="research-body"><div class="empty">เลือกเหรียญและกด Run 1H level EDA</div></div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><div><h2 class="panel-title">นิยามสูตรและตัวแปรที่ทดสอบ</h2><div class="panel-subtitle">ตรงกับ Pine Script สำหรับ BB/KC และ RSI ของ diff</div></div></div>
+    <div class="research-body method-note">
+      <p><b>Spread:</b> diff% = (upperBB − upperKC) / upperKC × 100; SMA20 เป็นเส้นกลางร่วม, BB = SMA20 ± 2×population stdev20, KC = SMA20 ± 2×ATR20 (Wilder RMA). เมื่อ multiplier เท่ากัน เครื่องหมาย diff สะท้อน stdev−ATR; diff≤0 จึงเป็น compression state ส่วน diff>0 คือ BB กว้างกว่า KC ณ ขณะนั้น.</p>
+      <p><b>RSI(diff):</b> Wilder RSI14 คำนวณจากการเปลี่ยนแปลงของ diff; SMA7 ใช้ smooth เส้น RSI. ไม่ใช่ RSI ของราคาหรือ MACD; สีแท่งใน Pine เป็นการวาดประกอบและไม่ได้เข้าเงื่อนไข EDA นี้.</p>
+      <p><b>EMA momentum:</b> สถานะรายวันแยกจาก BB/KC; EMA12 close เทียบ EMA26 close. EDA วัด outcome ตามสถานะ ไม่ใช่สัญญาณซื้อขายเดี่ยว.</p>
+      <p><b>ระดับจาก Pine:</b> เมื่อ RSI(diff) ตัด SMA7 จะบันทึก high ของแท่ง 1H เป็นระดับ และลากถึง cross ถัดไป; จึงเป็น cross-high candidate ไม่ใช่ swing support/resistance ที่ยืนยันจากราคา. Level EDA ใช้แท่งถัดไปเริ่มทดสอบ, touch ±0.10%, close-break >0.10% และผล 6/24/72H แบบ gross.</p>
+      <p><b>ผลลัพธ์:</b> RV ข้างหน้า = √Σ(log return²) จาก H แท่งถัดไป; เทียบกับ realized volatility ย้อนหลัง 20 แท่งที่ปรับสเกลเป็น H วัน. แท่งล่าสุด H วันถูกตัดออกเพราะยังไม่มีอนาคตครบ.</p>
+    </div>
+  </section>
+</section>
+
+<section id="strategyView" class="view" hidden>
+  <div class="view-heading">
+    <div><h2>Candidate strategy · long-only spot</h2><p>แยกการทดสอบความผันผวนออกจาก P&amp;L simulation · ไม่มี short / leverage / portfolio sizing</p></div>
+  </div>
+  <div class="notice"><span aria-hidden="true">[NOTICE]</span><div><strong>ไม่ใช่ผลกลยุทธ์ที่พร้อมใช้จริง:</strong> กติกาด้านล่างเป็น candidate baseline สำหรับตรวจว่าการ release ที่มาพร้อม upside breakout มี edge หลังต้นทุนหรือไม่; ไม่ได้ซื้อขาย volatility โดยตรงและไม่ใช่คำแนะนำลงทุน</div></div>
+
+  <section class="panel">
+    <div class="strategy-controls">
+      <div class="field"><label for="feeBps">Fee ต่อข้าง (bps) <button class="tip" type="button" aria-label="สมมติฐานค่าธรรมเนียม" data-tip="สมมติฐานที่แก้ได้; 10 bps = 0.10% ต่อการซื้อและขาย. ค่าจริงขึ้นกับ tier, ส่วนลดและประเภทคำสั่ง">i</button></label><input id="feeBps" type="number" min="0" max="500" step="1" value="10"></div>
+      <div class="field"><label for="slipBps">Slippage ต่อข้าง (bps) <button class="tip" type="button" aria-label="สมมติฐาน slippage" data-tip="สมมติฐานที่แก้ได้; ค่าคงที่ไม่แทน spread/market impact ย้อนหลัง">i</button></label><input id="slipBps" type="number" min="0" max="500" step="1" value="5"></div>
+      <button id="runBacktestBtn" class="btn primary" type="button">Run candidate backtest</button>
+      <button id="exportTradesBtn" class="btn secondary" type="button" disabled>Export trade ledger</button>
+      <div class="note-inline" id="strategyState">สแกนข้อมูลก่อน แล้วคำนวณผลด้วยค่าต้นทุนที่เลือก</div>
+    </div>
+    <details class="strategy-rule" open>
+      <summary>กติกาที่ตรึงไว้ · ตรวจ look-ahead และสมมติฐาน</summary>
+      <div class="strategy-rule-body">
+        <ol>
+          <li><b>Setup/trigger:</b> diff Daily ตัดจาก ≤0 เป็น &gt;0 และ close วันนี้สูงกว่า high สูงสุดของ 20 แท่งก่อนหน้า (ไม่รวมแท่งสัญญาณ).</li>
+          <li><b>Entry:</b> ซื้อที่ open ของแท่ง Daily ถัดไป เพื่อไม่ใช้ราคาปิดที่ยังไม่รู้ตอนส่งคำสั่ง.</li>
+          <li><b>Exit:</b> ขายที่ close หลังถือครบ H แท่ง; H ใช้ค่าจากตัวเลือก Forward horizon. ไม่มี stop, target หรือ intrabar fill model.</li>
+          <li><b>Cost:</b> คิด fee และ slippage ต่อข้างจาก input ทั้งขาเข้าและขาออก; gross/net แสดงแยกกันในผลรายเหรียญ. ไม่รวม funding/borrow เพราะเป็น Binance Spot long-only.</li>
+          <li><b>Position overlap:</b> ไม่เปิด trade ใหม่ในเหรียญเดิมจน position เดิมปิด; แต่ pooled trades ข้ามเหรียญไม่ได้จำลองเงินทุนร่วม, การจัดสรรทุน หรือสภาพคล่อง.</li>
+        </ol>
+      </div>
+    </details>
+
+    <div class="split-warning">Historical membership ของ CMC100 ไม่ได้มาจาก latest-constituents endpoint; ใช้ current members ย้อนหลังทำให้เกิด survivorship/listing bias. ช่วงท้าย 20% เป็น pseudo-OOS ตามปฏิทินร่วม แต่ไม่ใช่ sealed holdout เพราะกำลังกำหนด/ทดสอบกติกาในงานวิจัยนี้; ต้องตรึงกติกาแล้วเก็บ forward paper data ก่อนเรียก OOS จริง.</div>
+
+    <div class="panel-head"><div><h2 class="panel-title">ผลรวมทุกเหรียญ · pooled trade distribution</h2><div class="panel-subtitle">แต่ละช่วงใช้เส้นแบ่ง UTC ปฏิทินเดียวกันสำหรับทุกเหรียญ</div></div><span class="micro-label">ไม่ใช่ portfolio equity curve</span></div>
+    <div class="research-body">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="ตาราง pooled candidate backtest">
+        <table class="strategy-table">
+          <thead>
+            <tr>
+              <th>ช่วงข้อมูล</th>
+              <th class="num">Trades</th>
+              <th class="num">เหรียญที่มี trade</th>
+              <th class="num">Win rate net</th>
+              <th class="num">Mean net/trade</th>
+              <th class="num">Profit factor</th>
+              <th class="num">ค่าเฉลี่ย compounded/coin <button class="tip" type="button" aria-label="ค่าเฉลี่ย compounding ต่อเหรียญ" data-tip="ค่าเฉลี่ยผลตอบแทนสะสมรายเหรียญที่มี trade; ไม่ได้ใช้เงินทุนร่วมและไม่ควรอ่านเป็น portfolio return">i</button></th>
+            </tr>
+          </thead>
+          <tbody id="strategyAggregateRows"><tr><td colspan="7" class="empty">ยังไม่มีผล backtest</td></tr></tbody>
+        </table>
+      </div>
+      <div class="table-foot">Pooled trade distribution รวมรายการ trade จากทุกสินทรัพย์; win rate/mean/PF ไม่คำนึงว่าหลายเหรียญเปิดพร้อมกัน. แถว compounded เฉลี่ยผลแยกเหรียญ ไม่ใช่ผลตอบแทนเงินกองเดียว.</div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><div><h2 id="selectedStrategyTitle" class="panel-title">ผลแยกตามเหรียญที่เลือก</h2><div class="panel-subtitle">ช่วงต้น/กลาง/ท้ายแบ่งตามวันปฏิทินร่วมกัน; สินทรัพย์ที่เริ่มเทรดภายหลังจะไม่มีข้อมูลในช่วงเก่า</div></div><span class="micro-label">คลิก ticker ด้านล่างเพื่อเลือก</span></div>
+    <div class="research-body">
+      <div id="selectedStrategyEquityCurve" class="equity-chart-wrap" style="display:none"></div>
+      <div class="table-wrap">
+        <table class="strategy-table">
+          <thead>
+            <tr><th>ช่วง</th><th class="num">Trades</th><th class="num">Win net</th><th class="num">Mean net/trade</th><th class="num">PF</th><th class="num">Compounded</th><th class="num">Max DD ของ trade sequence</th><th class="num">Buy &amp; hold net</th></tr>
+          </thead>
+          <tbody id="selectedStrategyRows"><tr><td colspan="8" class="empty">เลือกเหรียญหลัง Run candidate backtest</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><div><h2 class="panel-title">รายเหรียญ · candidate performance</h2><div class="panel-subtitle">เรียงตามจำนวน trades ในช่วงท้ายก่อน · คลิก ticker เพื่อดูรายละเอียด</div></div><span class="micro-label">current CMC100 cohort</span></div>
+    <div class="table-wrap">
+      <table class="strategy-table">
+        <thead>
+          <tr><th>Rank</th><th>Coin</th><th class="num">Trades · ทั้งช่วง</th><th class="num">Compounded · ทั้งช่วง</th><th class="num">Trades · ท้าย 20%</th><th class="num">Win · ท้าย</th><th class="num">Mean net · ท้าย</th><th class="num">PF · ท้าย</th></tr>
+        </thead>
+        <tbody id="strategyCoinRows"><tr><td colspan="8" class="empty">สแกนและกด Run candidate backtest</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><div><h2 class="panel-title">สรุป research tracks · EDA ไม่ใช่ P&amp;L backtest</h2><div class="panel-subtitle">แยกสิ่งที่วัดได้ตอนนี้ออกจาก strategy ที่ต้องกำหนดกติกาก่อน</div></div></div>
+    <div class="research-body">
+      <div class="table-wrap">
+        <table class="research-table">
+          <thead><tr><th>Track</th><th>สัญญาณ / นิยาม</th><th>ผลที่ทดสอบ</th><th>สถานะ</th></tr></thead>
+          <tbody>
+            <tr><td><b>BB/KC Daily</b></td><td>diff state: squeeze, release, expansion, cooling</td><td>Forward RV, diff persistence, RV median และ price direction</td><td>Descriptive EDA · ไม่ใช่ entry rule</td></tr>
+            <tr><td><b>EMA momentum Daily</b></td><td>EMA12 close เทียบ EMA26 close</td><td>เปรียบเทียบ future outcomes ระหว่าง EMA บวก/ลบ</td><td>EDA regime filter · ยังไม่มี P&amp;L strategy แยก</td></tr>
+            <tr><td><b>RSI(diff) cross-high 1H</b></td><td>บันทึก high เมื่อ RSI(diff) cross SMA7; ตรวจ touch, close-break, false break, retest</td><td>6/24/72H directional movement และ hold rate ก่อนต้นทุน</td><td>Level event study · candidate levels ไม่ใช่ S/R ที่ยืนยันแล้ว</td></tr>
+            <tr><td><b>Daily release + 20D breakout</b></td><td>Release และ close สูงกว่า prior 20D high; เข้า next Daily open, ออก close หลัง H bars</td><td>Trade ledger, win rate, mean net, PF, compounded และช่วงเวลา</td><td>มี costed candidate backtest; ยังไม่ใช่ portfolio/OOS ที่ยืนยัน</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-foot">ยังไม่รวม EMA/level event study เข้า P&amp;L เพราะยังไม่กำหนด entry/exit, stop, sizing, fee/impact model และการจัดการสัญญาณซ้อน. ห้ามเทียบ P(RV ขยาย) กับกำไร หรือถือ rank เป็นคำแนะนำลงทุน.</div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head"><div><h2 class="panel-title">ข้อจำกัดของผล</h2></div></div>
+    <div class="research-body method-note">
+      <p>กลยุทธ์ long-only spot นี้ทดสอบ price breakout หลัง volatility release ไม่ได้ซื้อความผันผวนโดยตรง; trade count น้อย, sample ทับซ้อนตามตลาดและเหรียญสัมพันธ์กัน. ไม่ทำ optimization/grid search จึงไม่มีการเลือกค่าที่ชนะย้อนหลัง แต่พารามิเตอร์เดียวกันก็ยังถูกเสนอจากการสำรวจข้อมูลนี้. ไม่มีค่าธรรมเนียมจริงรายบัญชี, spread/order-book replay, liquidity constraints, partial fills, tax หรือ portfolio-level risk sizing.</p>
+      <p>ก่อนสรุป edge ควรตรวจ trade log, เปลี่ยนต้นทุน/ slippage แบบ stress, bootstrap ตาม time blocks, แยก regime bull/bear, ตรวจ delisted/current-membership bias และเก็บ forward test หลังตรึง rule. ถ้าจะเพิ่ม short ให้แยก USDⓈ-M futures data, funding, fee และ liquidation model แทนการนำ short มาปน Spot.</p>
+    </div>
+  </section>
+</section>
+
+<section id="forecastView" class="view" hidden>
+  <div class="view-heading">
+    <div>
+      <h2>พยากรณ์กรอบราคาในอนาคต (Forward Volatility Cone · 2SD Probability Band)</h2>
+      <p>คำนวณราคาเฉลี่ยคาดการณ์ (Expected Path) พร้อมกรอบบน/ล่าง ±2SD ที่ขยายตัวตามความผันผวน (95.4% Confidence เหมือน Bollinger Bands)</p>
+    </div>
+    <div class="horizon-control">
+      <div class="field">
+        <label for="forecastCoinSelect">เลือกเหรียญ</label>
+        <select id="forecastCoinSelect"><option value="">-- กรุณาเลือกเหรียญ --</option></select>
+      </div>
+      <div class="field">
+        <label for="forecastHorizon">ระยะเวลาพยากรณ์</label>
+        <select id="forecastHorizon">
+          <option value="7">7 วัน (1 สัปดาห์)</option>
+          <option value="14">14 วัน (2 สัปดาห์)</option>
+          <option value="30" selected>30 วัน (1 เดือน)</option>
+          <option value="60">60 วัน (2 เดือน)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="forecastMode">สมมติฐานทิศทาง (Drift)</label>
+        <select id="forecastMode">
+          <option value="momentum" selected>ตามโมเมนตัมปัจจุบัน (EMA12/26 &amp; Trend)</option>
+          <option value="neutral">ไม่เอียงทิศทาง (Neutral Martingale · μ = 0)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice blue">
+    <span aria-hidden="true">ℹ</span>
+    <div>
+      <strong>หลักการคำนวณตามหลักคณิตศาสตร์การเงิน (Log-Normal Diffusion Model):</strong>
+      เส้นกลางคือค่าเฉลี่ยคาดการณ์ตามทิศทางโมเมนตัม ส่วนกรอบบน (+2SD) และกรอบล่าง (-2SD) ขยายตัวด้วยสูตร $\sigma \sqrt{\tau}$ ตามพฤติกรรม Brownian Motion ครอบคลุม 95.4% ของโอกาสการแกว่งตัวของราคาทางสถิติ เหมือน Bollinger Bands ที่พุ่งทะลุไปในอนาคต
+    </div>
+  </div>
+
+  <div class="forecast-grid">
+    <div class="forecast-card">
+      <span class="f-label">ราคาปิดล่าสุด (S₀)</span>
+      <span class="f-val" id="fcCurrentPrice">—</span>
+      <span class="metric-note" id="fcCoinSymbol">รอเลือกเหรียญ</span>
+    </div>
+    <div class="forecast-card">
+      <span class="f-label">Realized Volatility</span>
+      <span class="f-val" id="fcDailyVol">—</span>
+      <span class="metric-note" id="fcAnnualVol">ต่อวัน (Annualized —)</span>
+    </div>
+    <div class="forecast-card card-mean">
+      <span class="f-label">ราคาเฉลี่ยคาดการณ์ (Mean)</span>
+      <span class="f-val" id="fcMeanPrice">—</span>
+      <span class="metric-note" id="fcMeanChange">เป้าหมาย ณ วันสุดท้าย</span>
+    </div>
+    <div class="forecast-card card-upper">
+      <span class="f-label">กรอบบนสูงสุด (+2SD Target)</span>
+      <span class="f-val" id="fcUpper2SD">—</span>
+      <span class="metric-note" id="fcUpperChange">เพดานความน่าจะเป็น 95.4%</span>
+    </div>
+    <div class="forecast-card card-lower">
+      <span class="f-label">กรอบล่างต่ำสุด (-2SD Support)</span>
+      <span class="f-val" id="fcLower2SD">—</span>
+      <span class="metric-note" id="fcLowerChange">พื้นรับความน่าจะเป็น 95.4%</span>
+    </div>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title" id="fcChartTitle">กราฟจำลองกรวยความน่าจะเป็นของราคา (Price Cone Chart)</h2>
+        <div class="panel-subtitle" id="fcChartSubtitle">แสดงประวัติราคาจริง 30 วัน + พยากรณ์ล่วงหน้าพร้อมแถบความเชื่อมั่น ±1SD และ ±2SD</div>
+      </div>
+      <div class="forecast-hud-chips">
+        <span class="f-chip"><i class="f-actual"></i>ราคาจริงในอดีต</span>
+        <span class="f-chip"><i class="f-upper"></i>กรอบบน +2SD (95.4%)</span>
+        <span class="f-chip"><i class="f-mean"></i>เส้นกลางเฉลี่ย (Mean)</span>
+        <span class="f-chip"><i class="f-lower"></i>กรอบล่าง -2SD (95.4%)</span>
+      </div>
+    </div>
+    <div class="forecast-chart-box">
+      <div id="forecastChartWrap"><div class="chart-empty">กรุณาเลือกเหรียญและโหลดข้อมูลเพื่อดูกราฟพยากรณ์</div></div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:14px">
+    <div class="panel-head">
+      <div>
+        <h2 class="panel-title">ตารางหมุดหมายเป้าหมายราคาตามวันที่ล่วงหน้า (Forward Price Milestones)</h2>
+        <div class="panel-subtitle">ช่วงราคาที่เป็นไปได้ในเชิงสถิติ ณ วันที่ +1D, +3D, +7D, +14D, +30D</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="research-table">
+        <thead>
+          <tr>
+            <th>วันที่ล่วงหน้า</th>
+            <th>จำนวนวัน</th>
+            <th class="num">กรอบล่างรับเหนียว (-2SD)</th>
+            <th class="num">ราคาเฉลี่ยคาดการณ์ (Center Mean)</th>
+            <th class="num">กรอบบนต้านสำคัญ (+2SD)</th>
+            <th class="num">ช่วงแกว่งตัวกว้างสุด (Band Spread)</th>
+          </tr>
+        </thead>
+        <tbody id="forecastMilestoneRows">
+          <tr><td colspan="6" class="empty">เลือกเหรียญและสแกนข้อมูลก่อน</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-foot">
+      คำนวณจาก Log-normal diffusion model ด้วยความผันผวนย้อนหลัง 20 วันล่าสุด. ตัวเลขนี้ไม่ใช่คำรับประกันราคาในอนาคต แต่เป็น "ขอบเขตเชิงความน่าจะเป็นทางสถิติ (Statistical Bounds)" เพื่อช่วยให้นักเทรดวางจุด Take Profit หรือ Stop Loss ได้อย่างสมเหตุสมผลโดยไม่อิงอารมณ์.
+    </div>
+  </section>
+</section>
+
+<footer class="footer">
+  <span>Research prototype · ข้อมูลอยู่ใน browser session · ไม่ส่งคำสั่งเทรด</span>
+  <span class="mono"><a class="text-link" href="https://coinmarketcap.com/charts/cmc100/" target="_blank" rel="noreferrer">CoinMarketCap CMC100</a> · Binance Spot public Klines · local proxy at /api/cmc100</span>
+</footer>
+</main>
+</div>
+<div id="floatingTooltip" class="floating-tooltip" role="tooltip" hidden></div>
+<script src="./research.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>

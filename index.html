@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090e1a">
-<title>Penguin Volatility Lab · CMC100 Crypto Quant</title>
+<title>Penguin Volatility Lab · Binance Futures Market Scanner &amp; Quant Lab</title>
 <style>
 :root{
   --navy:#090d16;--navy2:#111927;--ink:#f8fafc;--ink-bright:#ffffff;--muted:#94a3b8;--muted-dark:#64748b;
@@ -855,9 +855,9 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
   <div class="brand">
     <div class="mark" aria-hidden="true">PT</div>
     <div>
-      <div class="eyebrow">Local quantitative research · crypto</div>
+      <div class="eyebrow">Local quantitative research · crypto futures</div>
       <h1>Penguin Volatility Lab</h1>
-      <div class="subhead">CMC100 universe · BB–KC regime · Daily EDA · 4H RSI(diff) · candidate spot backtest</div>
+      <div class="subhead">Binance Futures USDⓈ-M Perpetual · BB–KC regime · Daily EDA · 4H RSI(diff) · candidate backtest</div>
     </div>
   </div>
   <div class="topbar-right">
@@ -868,7 +868,7 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
     </button>
     <div class="topmeta">
       <div class="topmeta-badges">
-        <span class="readonly"><i class="dot"></i> BINANCE SPOT · READ ONLY</span>
+        <span class="readonly"><i class="dot"></i> BINANCE FUTURES · USDT-M</span>
         <span class="sync-schedule-pill">[SYNC 07:00 AM BKK]</span>
       </div>
       <div id="syncStamp" style="margin-top:7px">กำลังเชื่อมต่อข้อมูลสาธารณะ…</div>
@@ -877,15 +877,15 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
 </header>
 
 <nav class="tabs" aria-label="เมนูหลัก">
-  <button type="button" class="active" data-view="marketView" aria-controls="marketView" aria-pressed="true"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>ตลาดรวม &amp; สแกนเนอร์ (CMC100)</button>
+  <button type="button" class="active" data-view="marketView" aria-controls="marketView" aria-pressed="true"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>ตลาดรวม &amp; สแกนเนอร์ Futures</button>
   <button type="button" data-view="researchView" aria-controls="researchView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>EDA · สถิติสภาวะตลาด</button>
   <button type="button" data-view="strategyView" aria-controls="strategyView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Backtest · กลยุทธ์ Long</button>
   <button type="button" data-view="forecastView" aria-controls="forecastView" aria-pressed="false"><svg class="tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;vertical-align:middle"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>พยากรณ์กรอบราคา · 2SD Cone</button>
 </nav>
 
-<div class="statusline"><span id="runStatus" role="status" aria-live="polite">กำลังเตรียมข้อมูล…</span><span id="universeStamp">CMC100 · รอโหลดรายชื่อ</span></div>
+<div class="statusline"><span id="runStatus" role="status" aria-live="polite">กำลังเตรียมข้อมูล…</span><span id="universeStamp">Binance Futures · รอโหลดรายชื่อ</span></div>
 
-<div class="notice"><span aria-hidden="true">[NOTICE]</span><div><strong>อ่านผลให้ถูก:</strong> diff &gt; 0 บอกว่า BB กว้างกว่า KC ณ แท่งนั้น ไม่ได้แปลว่า volatility “กำลังจะมา” หรือบอกทิศทางราคา; หน้า EDA ทดสอบเงื่อนไขและผลลัพธ์ข้างหน้าแยกจากกลยุทธ์ ส่วน backtest เป็นเพียง candidate long-only spot ที่ระบุกติกา/ต้นทุนไว้ชัดเจน</div></div>
+<div class="notice"><span aria-hidden="true">[NOTICE]</span><div><strong>อ่านผลให้ถูก:</strong> diff &gt; 0 บอกว่า BB กว้างกว่า KC ณ แท่งนั้น ไม่ได้แปลว่า volatility “กำลังจะมา” หรือบอกทิศทางราคา; หน้า EDA ทดสอบเงื่อนไขและผลลัพธ์ข้างหน้าแยกจากกลยุทธ์ ส่วน backtest เป็นเพียง candidate long-only ที่ระบุกติกา/ต้นทุนไว้ชัดเจน</div></div>
 
 <main>
 <section id="marketView" class="view">
@@ -893,36 +893,36 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
   <div class="data-freshness-bar" id="dataFreshnessBar">
     <div class="freshness-col">
       <span class="freshness-badge">[DAILY 07:00 AM SYNC]</span>
-      <span class="freshness-label">สถานะข้อมูลดัชนี CMC100 ล่าสุด:</span>
+      <span class="freshness-label">สถานะข้อมูลตลาด Futures ล่าสุด:</span>
       <strong id="freshnessDate" class="freshness-date">กำลังตรวจสอบรอบอัปเดต...</strong>
     </div>
     <div class="freshness-col right">
-      <span class="freshness-sub" id="freshnessCycle">รอบอัปเดตดัชนีถัดไป: ทุกวันเวลา 07:00 น. (00:00 UTC · ปิดแท่ง Daily)</span>
+      <span class="freshness-sub" id="freshnessCycle">รอบอัปเดตถัดไป: ทุกวันเวลา 07:00 น. (00:00 UTC · ปิดแท่ง Daily)</span>
       <span class="freshness-tag live"><i class="dot-small"></i> Live Price Feeds</span>
     </div>
   </div>
 
   <section class="panel toolbar" aria-label="ตัวควบคุม universe และการสแกน">
-    <div class="field"><label for="coinSearch">ค้นหาเหรียญใน CMC100</label><input id="coinSearch" type="search" placeholder="ชื่อหรือ ticker เช่น BTC, Solana" autocomplete="off"></div>
-    <div class="field" style="display:none"><label for="universeFilter">Spot coverage</label><select id="universeFilter"><option value="all">Spot: ทั้งหมด</option><option value="available">มี Binance Spot USDT</option><option value="unavailable">ไม่มีคู่ Binance Spot USDT</option></select></div>
-    <div class="field"><label for="sortBy">เรียงตาม</label><select id="sortBy"><option value="score">Quant Score (0–100)</option><option value="weight" selected>CMC weight</option><option value="phase">BB/KC state</option><option value="ema">EMA momentum spread</option><option value="diff">diff 1D</option><option value="rsi">RSI(diff)</option><option value="bars">Bars</option></select></div>
+    <div class="field"><label for="coinSearch">ค้นหาสัญญา Binance Futures</label><input id="coinSearch" type="search" placeholder="ชื่อสัญญาหรือ ticker เช่น BTC, ETH, SOL" autocomplete="off"></div>
+    <div class="field" style="display:none"><label for="universeFilter">Futures coverage</label><select id="universeFilter"><option value="all">Futures: ทั้งหมด</option><option value="available">มีสัญญา Futures USDT-M</option><option value="unavailable">ไม่มีคู่ Futures USDT</option></select></div>
+    <div class="field"><label for="sortBy">เรียงตาม</label><select id="sortBy"><option value="score">Quant Score (0–100)</option><option value="weight" selected>Market Weight</option><option value="phase">BB/KC state</option><option value="ema">EMA momentum spread</option><option value="diff">diff 1D</option><option value="rsi">RSI(diff)</option><option value="bars">Bars</option></select></div>
     <div class="field"><label for="lookback">Daily history</label><select id="lookback"><option value="3">3 ปี</option><option value="5" selected>5 ปี</option><option value="all">ตั้งแต่ปี 2017*</option></select></div>
-    <button id="refreshUniverseBtn" class="btn secondary" type="button">Refresh CMC100</button>
-    <button id="scanAllBtn" class="btn primary" type="button">สแกนคู่ที่ใช้ได้</button>
+    <button id="refreshUniverseBtn" class="btn secondary" type="button">Refresh ตลาด</button>
+    <button id="scanAllBtn" class="btn primary" type="button">สแกนสัญญาที่เปิดเทรด</button>
     <button id="exportBtn" class="btn secondary" type="button" disabled>Export CSV</button>
     <div id="scanProgress" class="progress-wrap" hidden><progress id="scanProgressBar" max="100" value="0"></progress><span id="scanProgressLabel">0/0</span></div>
   </section>
 
-  <div class="universe-stamp"><span>CMC100 คือสมาชิกดัชนีล่าสุดจาก CoinMarketCap ไม่ใช่ 100 คู่ Binance; mapping ใช้ ticker ตรงตัวและควรตรวจ token identity/alias ก่อนนำไปใช้</span><span>* ดึงข้อมูลตั้งแต่ 2017 หรือวันเริ่มมีข้อมูล สูงสุดตาม Binance Klines</span></div>
+  <div class="universe-stamp"><span>Universe ครอบคลุมสัญญา Binance USDⓈ-M Perpetual ทั้งตลาด พร้อมน้ำหนักเทียบเคียง และตรวจสถานะ active จาก exchangeInfo แบบอัตโนมัติ</span><span>* ดึงข้อมูลสูงสุดตาม Binance Futures Klines</span></div>
 
-  <section class="panel constituent-filter-panel" aria-label="ตัวกรองสถานะ CMC100 แยกตามหมวดหมู่">
+  <section class="panel constituent-filter-panel" aria-label="ตัวกรองสถานะสัญญา Futures แยกตามหมวดหมู่">
     <div class="filter-panel-head">
       <div>
-        <h2 class="panel-title">Filter constituents แยกตามหมวดหมู่ (Multi-Select Categories)</h2>
+        <h2 class="panel-title">Filter สัญญา Futures แยกตามหมวดหมู่ (Multi-Select Categories)</h2>
         <div class="panel-subtitle">เลือกได้มากกว่า 1 ตัวเลือกในแต่ละหมวดหมู่ (OR ภายในหมวดเดียวกัน, AND ข้ามหมวดหมู่)</div>
       </div>
       <div class="filter-panel-actions">
-        <span id="filterSummary" class="filter-summary">รอโหลด CMC100</span>
+        <span id="filterSummary" class="filter-summary">รอโหลดข้อมูลสัญญา</span>
         <button id="toggleAdvancedFiltersBtn" class="btn secondary btn-sm" type="button" aria-expanded="false" aria-controls="advancedFilters">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:4px;" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>ช่วงตัวเลขละเอียด
         </button>
@@ -996,16 +996,16 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
         </div>
       </div>
 
-      <!-- หมวด 4: Binance Spot Coverage -->
+      <!-- หมวด 4: Binance Futures Coverage -->
       <div class="category-block" data-category="spot">
         <div class="category-header">
-          <span class="category-title">4. Binance Spot Coverage</span>
+          <span class="category-title">4. Binance Futures Coverage</span>
           <span class="category-badge" id="badge-spot">ทั้งหมด</span>
         </div>
         <div class="category-chips" id="chips-spot">
           <button type="button" class="filter-chip active" data-cat="spot" data-val="all">ทั้งหมด</button>
-          <button type="button" class="filter-chip chip-spot-yes" data-cat="spot" data-val="available"><span class="chip-badge">[YES]</span> มีคู่ Binance Spot USDT</button>
-          <button type="button" class="filter-chip chip-spot-no" data-cat="spot" data-val="unavailable"><span class="chip-badge">[NO]</span> ไม่มีคู่ Spot USDT</button>
+          <button type="button" class="filter-chip chip-spot-yes" data-cat="spot" data-val="available"><span class="chip-badge">[YES]</span> มีสัญญา Futures USDT</button>
+          <button type="button" class="filter-chip chip-spot-no" data-cat="spot" data-val="unavailable"><span class="chip-badge">[NO]</span> ไม่มีสัญญา Futures</button>
         </div>
       </div>
 
@@ -1070,14 +1070,14 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
 
   <section class="metrics" aria-label="ภาพรวม universe">
     <div class="panel metric">
-      <div class="metric-label">สมาชิก CMC100 <button class="tip" type="button" aria-label="จำนวน constituents ล่าสุดจาก CMC100" data-tip="จำนวน constituents ล่าสุดจาก CoinMarketCap CMC100 API; รายชื่อและ weight เปลี่ยนได้เมื่อดัชนีปรับสมาชิก">i</button></div>
+      <div class="metric-label">สัญญา Futures ทั้งหมด <button class="tip" type="button" aria-label="จำนวนสัญญา Futures ทั้งหมด" data-tip="จำนวนสัญญา USDⓈ-M Perpetual ทั้งหมดที่เปิดเทรดบน Binance Futures">i</button></div>
       <div id="mUniverse" class="metric-value">—</div>
-      <div class="metric-note">ดัชนี exclude เหรียญที่ไม่เข้าเกณฑ์ methodology</div>
+      <div class="metric-note">ดึงตรงจาก exchangeInfo</div>
     </div>
     <div class="panel metric">
-      <div class="metric-label">Binance Spot coverage <button class="tip" type="button" aria-label="จำนวนคู่ Binance Spot USDT ที่จับคู่ได้" data-tip="จำนวน constituent ที่จับคู่ ticker แบบตรงตัวกับ active Binance Spot quote เป็น USDT ได้; ไม่มีคู่จะยังแสดงแต่ไม่รวมใน EDA">i</button></div>
+      <div class="metric-label">Futures coverage <button class="tip" type="button" aria-label="สัญญา Futures ที่รองรับ" data-tip="จำนวนสัญญา Futures USDT-M Perpetual ที่มีแท่งราคาพร้อมสแกน">i</button></div>
       <div id="mCoverage" class="metric-value">—</div>
-      <div class="metric-note">ไม่แทนข้อมูลทั้งตลาด CMC100</div>
+      <div class="metric-note">ครอบคลุมทั้งตลาด Binance</div>
     </div>
     <div class="panel metric">
       <div class="metric-label">สแกนแล้ว <button class="tip" type="button" aria-label="จำนวนเหรียญที่ดึง Daily data สำเร็จ" data-tip="จำนวนคู่ที่ดึง Daily Klines สำเร็จในรอบนี้; scan เก็บแท่งปิดแล้วเท่านั้น">i</button></div>
@@ -1239,20 +1239,20 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
     <section class="panel scanner" id="scannerSection" aria-label="รายชื่อและสถานะเหรียญ CMC100">
       <div class="panel-head">
         <div>
-          <h2 class="panel-title">ตารางสแกนเนอร์เหรียญ CMC100 (Full-Width Market Screener)</h2>
-          <div class="panel-subtitle">คลิกที่แถวเหรียญเพื่อเปิด "ห้องวิเคราะห์เจาะลึกเต็มจอ (Deep-Dive Studio)" ด้านล่าง · เรียงตาม CMC weight หรือ Quant Score</div>
+          <h2 class="panel-title">ตารางสแกนเนอร์สัญญา Binance Futures (Full-Width Market Screener)</h2>
+          <div class="panel-subtitle">คลิกที่แถวเหรียญเพื่อเปิด "ห้องวิเคราะห์เจาะลึกเต็มจอ (Deep-Dive Studio)" ด้านล่าง · เรียงตาม Market weight หรือ Quant Score</div>
         </div>
-        <span class="micro-label">100 constituents · Binance Spot</span>
+        <span class="micro-label">All USDⓈ-M Perps · Binance Futures</span>
       </div>
-      <div class="table-wrap" tabindex="0" role="region" aria-label="ตารางสมาชิก CMC100 เลื่อนเพื่อดูครบทุกเหรียญ">
+      <div class="table-wrap" tabindex="0" role="region" aria-label="ตารางสัญญา Binance Futures เลื่อนเพื่อดูครบทุกสัญญา">
         <table>
           <thead>
             <tr>
-              <th>Rank <button class="tip" type="button" aria-label="อันดับตามน้ำหนัก CMC100" data-tip="ลำดับตามน้ำหนัก CMC100 ล่าสุด; ไม่ใช่อันดับย้อนหลัง">i</button></th>
-              <th>เหรียญ</th>
+              <th>Rank <button class="tip" type="button" aria-label="อันดับสัญญาตาม Market weight" data-tip="ลำดับตามน้ำหนักในตลาด หรืออันดับเทียบเคียง">i</button></th>
+              <th>สัญญา</th>
               <th data-sort="score"><button class="sort-btn" type="button" data-sort="score" data-label="Quant Composite Score">Quant Score <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="คะแนน Quant รวม" data-tip="คะแนนความพร้อม 0-100 (5 เสาหลัก: Regime 30, Momentum 25, EDA Lift 20, Structure 15, Quality 10) · เกรด S, A, B, C">i</button></th>
-              <th class="num" data-sort="weight"><button class="sort-btn" type="button" data-sort="weight" data-label="CMC weight">CMC weight <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="ความหมาย CMC100 weight" data-tip="น้ำหนัก constituent ล่าสุด ไม่ใช่ขนาด position และห้ามนำ weight ปัจจุบันไปถ่วงผลย้อนหลัง">i</button></th>
-              <th>Binance Spot USDT</th>
+              <th class="num" data-sort="weight"><button class="sort-btn" type="button" data-sort="weight" data-label="Market weight">Market weight <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="ความหมาย Market weight" data-tip="น้ำหนัก constituent หรือสัดส่วนเทียบเคียง">i</button></th>
+              <th>Binance Futures USDT</th>
               <th>BB/KC 1D <button class="tip" type="button" aria-label="สถานะ BB/KC Daily" data-tip="สถานะ Daily จาก BB–KC diff ที่ปิดแล้ว: compression, release, expansion ต่อ หรือ cooling">i</button></th>
               <th data-sort="ema"><button class="sort-btn" type="button" data-sort="ema" data-label="EMA momentum spread">EMA momentum <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="EMA momentum definition" data-tip="สถานะแยกจาก BB/KC: EMA12 close เทียบ EMA26 close; spread มากไปน้อย sort ได้">i</button></th>
               <th class="num" data-sort="diff"><button class="sort-btn" type="button" data-sort="diff" data-label="diff 1D">diff 1D <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="สูตร diff" data-tip="(upperBB−upperKC)/upperKC×100; SMA20, population stdev20, Wilder ATR20">i</button></th>
@@ -1260,7 +1260,7 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
               <th class="num" data-sort="bars"><button class="sort-btn" type="button" data-sort="bars" data-label="Bars">Bars <span class="sort-indicator" aria-hidden="true">↕</span></button> <button class="tip" type="button" aria-label="จำนวนแท่ง" data-tip="จำนวนแท่ง Daily ที่โหลดสำเร็จของเหรียญนั้น">i</button></th>
             </tr>
           </thead>
-          <tbody id="coinRows"><tr><td colspan="10" class="empty">กำลังโหลดรายชื่อ CMC100…</td></tr></tbody>
+          <tbody id="coinRows"><tr><td colspan="10" class="empty">กำลังโหลดรายชื่อสัญญา Futures…</td></tr></tbody>
         </table>
       </div>
     </section>
@@ -1278,13 +1278,13 @@ tbody tr.selected{background:rgba(16,185,129,0.08);box-shadow:inset 3px 0 0 var(
           <div class="empty-icon-wrap"><div class="empty-radar-ping"></div><svg class="empty-big-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan-400)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
           <h3 class="empty-title">คลิกเลือกเหรียญจากตารางสแกนเนอร์ด้านบน</h3>
           <p class="empty-desc">ระบบจะเปิด "ห้องวิเคราะห์เจาะลึกเต็มจอ (Deep-Dive Studio)" แสดงกราฟแท่งเทียน Candlestick, คะแนนความพร้อม 5 เสาหลัก (Quant Composite Score 0–100), คำแนะนำเทรดสำหรับมือใหม่ และสถิติความผันผวน 4H/Daily ทันที</p>
-          <button type="button" class="btn btn-sm primary" id="emptyScrollUpBtn">↑ เลื่อนไปดูตารางเหรียญ CMC100</button>
+          <button type="button" class="btn btn-sm primary" id="emptyScrollUpBtn">↑ เลื่อนไปดูตารางสัญญา Futures</button>
         </div>
       </div>
     </section>
   </section>
 
-  <div class="method-note"><b>Data gate:</b> รายชื่อ/weight จาก CMC100 API; ราคา/แท่งจาก Binance Spot Klines. ตัดแท่งที่ยังไม่ปิด, คำนวณแยกช่วงที่ต่อเนื่องเมื่อพบ gap, ไม่เติมราคา/แท่งที่หาย. CMC100 เป็น current constituent snapshot; ผลย้อนหลังบนสมาชิกปัจจุบันมี survivorship bias.</div>
+  <div class="method-note"><b>Data gate:</b> รายชื่อสัญญาและแท่งราคาจาก Binance Futures API (USDT-M Perpetual) พร้อมโหมดดึงตรงหรือผ่าน Proxy. ตัดแท่งที่ยังไม่ปิด, คำนวณแยกช่วงที่ต่อเนื่องเมื่อพบ gap, ไม่เติมราคา/แท่งที่หาย.</div>
 </section>
 
 <section id="researchView" class="view" hidden>

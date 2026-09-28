@@ -1,7 +1,13 @@
 "use strict";
 const E = window.PenguinResearch;
 const CMC_API = "/api/cmc100";
-const BINANCE_ROOT = "https://data-api.binance.vision/api/v3";
+// Futures API: proxy first (local server), fallback direct (CORS may block on static hosting)
+const FAPI_PROXY = "/api/fapi/v1";
+const FAPI_DATA_PROXY = "/api/futures/data";
+const FAPI_DIRECT = "https://fapi.binance.com/fapi/v1";
+const SPOT_ROOT = "https://data-api.binance.vision/api/v3";
+let BINANCE_ROOT = FAPI_PROXY; // will resolve in detectApiMode()
+let apiMode = "proxy"; // "proxy" | "direct" | "spot-fallback"
 const DAY_MS = E.DAY_MS;
 const INTERVALS = { "1d": DAY_MS, "4h": 4 * 3600000, "1h": 3600000 };
 const records = new Map();
@@ -17,6 +23,23 @@ let backtestKey = "";
 let backtestDone = false;
 let cmcUpdated = null;
 let exchangeInfoAt = null;
+
+/* Detect which API mode is available (proxy > direct > spot-fallback) */
+async function detectApiMode() {
+  // 1. Try local proxy (works when running server.js)
+  try {
+    const r = await fetch("/api/health", { signal: AbortSignal.timeout(3000) });
+    if (r.ok) { apiMode = "proxy"; BINANCE_ROOT = FAPI_PROXY; console.info("[API] Using local Futures proxy"); return; }
+  } catch {}
+  // 2. Try Binance Futures directly (may fail due to CORS on static hosting)
+  try {
+    const r = await fetch("https://fapi.binance.com/fapi/v1/ping", { signal: AbortSignal.timeout(5000) });
+    if (r.ok) { apiMode = "direct"; BINANCE_ROOT = FAPI_DIRECT; console.info("[API] Using direct Futures API"); return; }
+  } catch {}
+  // 3. Fallback to Spot (always has CORS)
+  apiMode = "spot-fallback"; BINANCE_ROOT = SPOT_ROOT;
+  console.warn("[API] Futures unavailable, falling back to Spot API");
+}
 
 // Multi-select category filters
 const filterCategories = {
@@ -49,7 +72,7 @@ const categoryLabels = {
   },
   spot: {
     available: "มีคู่ USDT",
-    unavailable: "ไม่มีคู่ Spot"
+    unavailable: "ไม่มีคู่ Futures"
   },
   tier: {
     S: "เกรด S",
@@ -420,50 +443,121 @@ async function fetchCmcConstituents() {
     console.warn("Static data snapshot failed:", err.message);
   }
 
-  throw new Error("ไม่สามารถโหลดรายชื่อสมาชิก CMC100 ได้จากทั้ง Proxy และ Snapshot");
+  return null; // CMC100 is now optional, not required
 }
 
-async function loadUniverse() {
-  setStatus("กำลังโหลดรายชื่อ CMC100 และคู่ Spot ที่เทรดได้…");
+async function loadFuturesUniverse() {
+  setStatus("กำลังโหลดรายชื่อสัญญา Futures USDT-M ทั้งหมดจาก Binance…");
   $("refreshUniverseBtn").disabled = true;
   try {
-    const [cmc, exchange] = await Promise.all([
-      fetchCmcConstituents(),
-      getJSON(`${BINANCE_ROOT}/exchangeInfo`, "Binance exchangeInfo")
-    ]);
-    const constituents = cmc?.data?.constituents;
-    if (!Array.isArray(constituents) || constituents.length !== 100) throw new Error(`CMC100 ส่งสมาชิก ${constituents?.length ?? 0} รายการ (ต้องเป็น 100)`);
-    if (!Array.isArray(exchange?.symbols)) throw new Error("Binance exchangeInfo รูปแบบไม่ถูกต้อง");
-    const pairs = new Map();
-    for (const pair of exchange.symbols) {
-      if (pair.status !== "TRADING" || pair.quoteAsset !== "USDT" || pair.isSpotTradingAllowed === false) continue;
-      const base = String(pair.baseAsset).toUpperCase();
-      if (!pairs.has(base)) pairs.set(base, []);
-      pairs.get(base).push(pair.symbol);
+    // Step 1: Detect API mode (proxy vs direct vs spot-fallback)
+    await detectApiMode();
+
+    // Step 2: Load Futures exchangeInfo
+    let exchangeUrl;
+    if (apiMode === "proxy") {
+      exchangeUrl = `${FAPI_PROXY}/exchangeInfo`;
+    } else if (apiMode === "direct") {
+      exchangeUrl = `${FAPI_DIRECT}/exchangeInfo`;
+    } else {
+      // spot-fallback: load Spot exchangeInfo instead
+      exchangeUrl = `${SPOT_ROOT}/exchangeInfo`;
     }
-    members = constituents.map(c => ({
-      id: String(c.id), cmcId: Number(c.id), name: String(c.name), symbol: String(c.symbol),
-      weight: Number(c.weight), url: String(c.url || ""), pair: (pairs.get(String(c.symbol).toUpperCase()) || []).sort()[0] || null
-    })).sort((a, b) => b.weight - a.weight);
-    cmcUpdated = cmc.data.last_update || cmc.status?.timestamp || cmc.synced_at || null;
+
+    let exchange = null;
+    try {
+      exchange = await getJSON(exchangeUrl, "Binance exchangeInfo");
+    } catch (err) {
+      console.info("Direct exchangeInfo fetch failed, checking static snapshot data/futures_exchange.json...", err.message);
+      try {
+        const staticUrl = new URL("data/futures_exchange.json", window.location.href).href;
+        exchange = await getJSON(staticUrl, "Binance Futures Snapshot");
+      } catch (err2) {
+        throw err;
+      }
+    }
+    const cmc = await fetchCmcConstituents(); // optional enrichment
+
+    if (!Array.isArray(exchange?.symbols)) throw new Error("Binance exchangeInfo รูปแบบไม่ถูกต้อง");
+
+    // Step 3: Build universe from ALL USDT-M perpetual contracts
+    const cmcMap = new Map();
+    if (cmc?.data?.constituents) {
+      for (const c of cmc.data.constituents) {
+        cmcMap.set(String(c.symbol).toUpperCase(), c);
+      }
+    }
+
+    if (apiMode === "spot-fallback") {
+      // Spot mode: filter USDT pairs that are trading
+      const futuresPairs = exchange.symbols.filter(s =>
+        s.status === "TRADING" && s.quoteAsset === "USDT" && s.isSpotTradingAllowed !== false
+      );
+      members = futuresPairs.map((s, idx) => {
+        const base = String(s.baseAsset).toUpperCase();
+        const cmcInfo = cmcMap.get(base);
+        return {
+          id: base,
+          cmcId: cmcInfo ? Number(cmcInfo.id) : null,
+          name: cmcInfo?.name || base,
+          symbol: base,
+          weight: cmcInfo?.weight || 0,
+          url: cmcInfo?.url || "",
+          pair: s.symbol,
+          contractType: "SPOT",
+          marginAsset: "USDT"
+        };
+      }).sort((a, b) => (b.weight || 0) - (a.weight || 0));
+    } else {
+      // Futures mode: filter USDT-M perpetual contracts
+      const perps = exchange.symbols.filter(s =>
+        s.contractType === "PERPETUAL" &&
+        s.quoteAsset === "USDT" &&
+        s.status === "TRADING" &&
+        s.marginAsset === "USDT"
+      );
+
+      members = perps.map((s, idx) => {
+        const base = String(s.baseAsset).toUpperCase();
+        const cmcInfo = cmcMap.get(base);
+        return {
+          id: base,
+          cmcId: cmcInfo ? Number(cmcInfo.id) : null,
+          name: cmcInfo?.name || base,
+          symbol: base,
+          weight: cmcInfo?.weight || 0,
+          url: cmcInfo?.url || "",
+          pair: s.symbol,
+          contractType: s.contractType,
+          marginAsset: s.marginAsset
+        };
+      }).sort((a, b) => (b.weight || 0) - (a.weight || 0));
+    }
+
+    cmcUpdated = cmc?.data?.last_update || cmc?.status?.timestamp || null;
     exchangeInfoAt = Date.now();
     records.clear(); fetchErrors.clear(); backtestDone = false; backtestKey = ""; selectedId = null;
     $("exportTradesBtn").disabled = true;
+
+    const modeLabel = apiMode === "spot-fallback" ? "Spot USDT" : "Futures USDT-M Perpetual";
     const parsedTime = cmcUpdated ? Date.parse(cmcUpdated) : null;
     const detailedSync = formatSyncDetailed(parsedTime);
     const thaiShortSync = formatDateTimeThai(parsedTime);
     if ($("freshnessDate")) $("freshnessDate").textContent = detailedSync;
-    if ($("syncStamp")) $("syncStamp").innerHTML = `ดัชนี CMC100 ล่าสุด: <b class="sync-stamp-val">${thaiShortSync}</b>`;
-    if ($("universeStamp")) $("universeStamp").textContent = `CMC100 · ${formatN(members.length)} constituents · ล่าสุด ${detailedSync}`;
-    setStatus(`โหลด CMC100 สำเร็จ · มี Binance Spot USDT ${members.filter(x => x.pair).length}/100 เหรียญ`);
+    if ($("syncStamp")) $("syncStamp").innerHTML = `ข้อมูล Binance ${modeLabel}: <b class="sync-stamp-val">${thaiShortSync}</b>`;
+    if ($("universeStamp")) $("universeStamp").textContent = `${modeLabel} · ${formatN(members.length)} contracts · API: ${apiMode}`;
+    setStatus(`โหลดสำเร็จ · Binance ${modeLabel} ${members.length} สัญญา · โหมด ${apiMode}`);
     $("exportBtn").disabled = false;
     renderUniverse(); renderSummary(); renderSelectedPlaceholder();
   } catch (error) {
     setStatus(`โหลด Universe ไม่สำเร็จ: ${error.message}`);
-    $("universeStamp").textContent = "ยังโหลดรายชื่อ CMC100 ไม่สำเร็จ";
+    $("universeStamp").textContent = "ยังโหลดรายชื่อไม่สำเร็จ";
     $("coinRows").innerHTML = `<tr><td colspan="10" class="empty error">${esc(error.message)}</td></tr>`;
   } finally { $("refreshUniverseBtn").disabled = false; }
 }
+
+// Keep loadUniverse as alias for backward compat
+const loadUniverse = loadFuturesUniverse;
 
 function setStatus(text) { $("runStatus").textContent = text; }
 
@@ -477,7 +571,7 @@ function renderSummary() {
   $("mRelease").textContent = String(phases.filter(x => x === "release").length);
   $("mExpand").textContent = String(phases.filter(x => x === "expand").length);
   $("coverageBar").style.width = `${available ? scanned / available * 100 : 0}%`;
-  $("coverageText").textContent = `สแกนแล้ว ${scanned} จาก ${available} คู่ Spot ที่มีใน CMC100`;
+  $("coverageText").textContent = `สแกนแล้ว ${scanned} จาก ${available} สัญญา Futures`;
   renderMarketBreadth();
 }
 
@@ -791,7 +885,7 @@ function renderUniverse() {
     const r = records.get(m.id), d = r?.daily.diff.at(-1), rsi = r?.daily.rsi.at(-1), phase = r?.phase;
     const bbkc = phase ? `<span class="phase phase-${phase.key}">${phase.key === "release" ? "▲ " : phase.key === "expand" ? "▲ " : phase.key === "squeeze" ? "● " : phase.key === "cool" ? "▼ " : ""}${esc(phase.label)}</span>` : (fetchErrors.has(m.id) ? '<span class="phase phase-na">Fetch error</span>' : '<span class="phase phase-na">รอสแกน</span>');
     const ema = r ? `<span class="phase phase-${r.emaMomentum.key}"><i class="phase-arrow">${r.emaMomentum.key === "bull" ? "▲" : r.emaMomentum.key === "bear" ? "▼" : "●"}</i>${esc(r.emaMomentum.label)}</span><small>${r.emaSpread > 0 ? "+" : ""}${fmt(r.emaSpread, 2, "%")}</small>` : '<span class="phase phase-na">รอสแกน</span>';
-    const pairLabel = m.pair ? `<span class="pair yes">${esc(m.pair)} <a class="ext-link" href="https://www.binance.com/en/trade/${esc(m.pair)}" target="_blank" rel="noreferrer" title="เปิด Binance Spot">↗</a></span>` : '<span class="pair no">ไม่มี Spot USDT</span>';
+    const pairLabel = m.pair ? `<span class="pair yes">${esc(m.pair)} <a class="ext-link" href="https://www.binance.com/en/futures/${esc(m.pair)}" target="_blank" rel="noreferrer" title="เปิด Binance Futures">↗</a></span>` : '<span class="pair no">ไม่มีคู่ USDT</span>';
     const selected = selectedId === m.id;
     const diffText = r ? `<span class="diff-val ${d > 0 ? "pos" : d < 0 ? "neg" : "zero"}">${d > 0 ? "+" : ""}${fmt(d, 2, "%")}</span>` : "—";
     const rsiText = r ? `<span class="rsi-val ${rsi > 70 ? "high" : rsi < 30 ? "low" : "mid"}">${fmt(rsi, 1)}</span>` : "—";
@@ -911,7 +1005,7 @@ function renderSelectedPlaceholder() {
       <button type="button" class="btn btn-sm secondary" id="scrollToTableBtnHero">↑ ตารางสแกนเนอร์</button>
     </div>
   </div>
-  <div class="empty">${scanBusy ? "กำลังสแกนทั้ง universe…" : member.pair ? "กำลังโหลดข้อมูลปิดแล้วและคำนวณ indicator…" : "เหรียญนี้เป็นสมาชิก CMC100 แต่ไม่พบคู่ Binance Spot USDT ที่ active"}</div>`;
+  <div class="empty">${scanBusy ? "กำลังสแกนทั้ง universe…" : member.pair ? "กำลังโหลดข้อมูลปิดแล้วและคำนวณ indicator…" : "เหรียญนี้ไม่มีสัญญา Futures USDT-M ที่ active บน Binance"}</div>`;
   $("scrollToTableBtnHero")?.addEventListener("click", () => {
     $("scannerSection")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -924,7 +1018,7 @@ function renderUnavailable(member) {
       <div class="studio-identity">
         <div class="studio-title-row">
           <span class="studio-symbol">${esc(member.symbol)}</span>
-          <span class="phase phase-na">ไม่มี Binance Spot USDT</span>
+          <span class="phase phase-na">ไม่มี Futures USDT</span>
           <span class="studio-rank-badge">CMC #${members.indexOf(member) + 1}</span>
         </div>
         <div class="studio-name-row"><span class="studio-fullname">${esc(member.name)}</span></div>
@@ -936,8 +1030,8 @@ function renderUnavailable(member) {
   </div>
   <div class="empty-studio-placeholder" style="padding: 28px 16px;">
     <div class="empty-big-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-    <h3 class="empty-title">ไม่พบคู่เทรด Binance Spot USDT สำหรับ ${esc(member.symbol)}</h3>
-    <p class="empty-desc">ยังคงแสดงสมาชิกครบ 100 เหรียญตามเกณฑ์ CMC100 แต่ไม่มีแท่งราคาจากคู่ Spot USDT บน Binance สำหรับทำ EDA และวิเคราะห์ จึงไม่ถูกรวมในการคำนวณ Binance cohort</p>
+    <h3 class="empty-title">ไม่พบสัญญา Futures USDT-M สำหรับ ${esc(member.symbol)}</h3>
+    <p class="empty-desc">เหรียญนี้ไม่มีสัญญา Futures Perpetual USDT-M บน Binance ที่ active จึงไม่สามารถดึงแท่งราคามาทำ EDA และวิเคราะห์ได้</p>
     <a class="btn btn-sm primary" href="${esc(member.url)}" target="_blank" rel="noreferrer">ดูข้อมูลบน CoinMarketCap ↗</a>
   </div>`;
   $("scrollToTableBtnHero")?.addEventListener("click", () => {
@@ -1142,7 +1236,7 @@ function renderSelected(record) {
   const rsiChart = record.bars4h ? chartSVG(record.short.rsi, "rsi", record.short.rsiSmooth, `${member.symbol} RSI of diff on 4 hour`) : '<div class="chart-empty">RSI(diff) 4H จะโหลดเมื่อเลือกเหรียญ</div>';
   const gapsText = `Daily missing intervals: ${record.daily.gaps}. 4H missing intervals: ${record.gaps4h ?? "not loaded"}. No missing candles are interpolated; indicator warm-up resets after gaps.`;
   const emaHelp = "EMA momentum คำนวณจาก close Daily ด้วย EMA12 เทียบ EMA26 ตามค่าเริ่มต้นของ Pine: EMA12>EMA26 = โมเมนตัมบวก, EMA12<EMA26 = โมเมนตัมลบ. เป็นสถานะแนวโน้ม ไม่ใช่คำทำนายราคา; seed เริ่มจากข้อมูลแรกของแต่ละช่วงต่อเนื่อง.";
-  const binanceUrl = member.pair ? `https://www.binance.com/en/trade/${esc(member.pair)}` : null;
+  const binanceUrl = member.pair ? `https://www.binance.com/en/futures/${esc(member.pair)}` : null;
   const qs = record.quantScore;
   let beginnerAdvice = "";
   if (qs) {
@@ -1207,7 +1301,7 @@ function renderSelected(record) {
       <div class="studio-pillar-item">
         <div class="pillar-top"><span class="pillar-label">5. QUALITY</span><b class="pillar-score">${qs.breakdown.quality}/10</b></div>
         <div class="pillar-bar"><div class="pillar-bar-fill" style="width:${(qs.breakdown.quality/10*100).toFixed(0)}%"></div></div>
-        <div class="pillar-reason">${record.member.pair ? "Active Binance Spot" : "ไม่มี Spot"}</div>
+        <div class="pillar-reason">${record.member.pair ? "Active Binance Futures" : "ไม่มี Futures"}</div>
         <div class="pillar-sub">${formatN(record.dailyBars.length)} แท่งประวัติ</div>
       </div>
     </div>
@@ -1220,7 +1314,7 @@ function renderSelected(record) {
       <div class="studio-identity">
         <div class="studio-title-row">
           <span class="studio-symbol">${esc(member.symbol)}</span>
-          <span class="studio-pair-badge">${member.pair ? esc(member.pair) : "No Spot Pair"}</span>
+          <span class="studio-pair-badge">${member.pair ? esc(member.pair) : "No Futures Pair"}</span>
           <span class="studio-rank-badge">CMC #${members.indexOf(member) + 1}</span>
         </div>
         <div class="studio-name-row">
@@ -1243,7 +1337,7 @@ function renderSelected(record) {
         <b class="asof-val">${formatSyncDetailed(record.asof)}</b>
       </div>
       <div class="studio-hero-actions">
-        ${member.pair ? `<a class="btn btn-sm btn-binance" href="${binanceUrl}" target="_blank" rel="noreferrer">Spot Trade ↗</a>` : ""}
+        ${member.pair ? `<a class="btn btn-sm btn-binance" href="${binanceUrl}" target="_blank" rel="noreferrer">Futures Trade ↗</a>` : ""}
         <button type="button" class="btn btn-sm secondary" id="scrollToTableBtnHero">↑ ตารางสแกนเนอร์</button>
       </div>
     </div>
@@ -1893,7 +1987,7 @@ async function runScanAll() {
       $("scanProgressBar").value = completed / candidates.length * 100;
       $("scanProgressLabel").textContent = `${completed}/${candidates.length} · ${member.symbol}`;
       $("coverageBar").style.width = `${completed / candidates.length * 100}%`;
-      setStatus(`CMC100 scan · ${completed}/${candidates.length} · ${records.size} loaded · ${fetchErrors.size} errors`);
+      setStatus(`Futures scan · ${completed}/${candidates.length} · ${records.size} loaded · ${fetchErrors.size} errors`);
     }
   };
   try {
@@ -1914,7 +2008,7 @@ function csvCell(value) { return `"${String(value ?? "").replace(/"/g, '""')}"`;
 
 function exportCSV() {
   if (!members.length) return;
-  const rows = [["cmc100_rank_by_weight", "name", "cmc_symbol", "cmc_weight_pct", "quant_score", "quant_grade", "binance_spot_usdt_pair", "scan_status", "phase_1d", "diff_1d_pct", "rsi_diff_1d", "rsi_diff_4h", "diff_percentile_252d", "atr20_pct", "return20_pct", "daily_bars", "daily_gaps", "asof_utc", "error"]];
+  const rows = [["rank", "name", "symbol", "cmc_weight_pct", "quant_score", "quant_grade", "binance_futures_pair", "scan_status", "phase_1d", "diff_1d_pct", "rsi_diff_1d", "rsi_diff_4h", "diff_percentile_252d", "atr20_pct", "return20_pct", "daily_bars", "daily_gaps", "asof_utc", "error"]];
   for (const member of members) {
     const r = records.get(member.id), i = r?.dailyBars.length - 1, j = r?.bars4h?.length - 1;
     const qs = r?.quantScore;

@@ -47,46 +47,52 @@ async function fetchWithRetry(url, maxAttempts = 4) {
   throw lastError;
 }
 
+const FAPI_EXCHANGE_URL = "https://fapi.binance.com/fapi/v1/exchangeInfo";
+const FUTURES_OUTPUT_FILE = path.join(DATA_DIR, "futures_exchange.json");
+
 async function syncDaily() {
+  const now = new Date();
+  const thaiLabel = new Intl.DateTimeFormat("th-TH-u-ca-gregory", {
+    timeZone: "Asia/Bangkok",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(now) + " น. (เวลาไทย)";
+
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+
+  // 1. Sync CMC100 index
   try {
     const payload = await fetchWithRetry(CMC_URL);
     const constituents = payload?.data?.constituents;
 
-    if (!Array.isArray(constituents) || constituents.length !== 100) {
-      throw new Error(`Invalid constituents payload: expected 100, received ${constituents?.length ?? 0}`);
+    if (Array.isArray(constituents) && constituents.length === 100) {
+      payload.synced_at = now.toISOString();
+      payload.synced_by = "github-actions-daily-cron";
+      payload.synced_label_th = thaiLabel;
+      fs.writeFileSync(OUTPUT_FILE, JSON.stringify(payload, null, 2), "utf8");
+      console.log(`✓ Successfully updated ${OUTPUT_FILE} (100 constituents)`);
     }
-
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-
-    // Add metadata for sync tracking
-    const now = new Date();
-    payload.synced_at = now.toISOString();
-    payload.synced_by = "github-actions-daily-cron";
-    payload.synced_label_th = new Intl.DateTimeFormat("th-TH-u-ca-gregory", {
-      timeZone: "Asia/Bangkok",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    }).format(now) + " น. (เวลาไทย)";
-
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(payload, null, 2), "utf8");
-    console.log(`✓ Successfully updated ${OUTPUT_FILE}`);
-    console.log(`  Constituents: ${constituents.length}`);
-    console.log(`  Index Last Update: ${payload.data.last_update}`);
-    console.log(`  Sync Timestamp: ${payload.synced_at}`);
   } catch (error) {
-    console.error(`✗ Fetch failed:`, error.message);
-    if (fs.existsSync(OUTPUT_FILE)) {
-      console.log(`ℹ Preserving existing cached snapshot in ${OUTPUT_FILE}`);
-      process.exit(0);
-    } else {
-      process.exit(1);
+    console.error(`✗ CMC100 fetch failed:`, error.message);
+  }
+
+  // 2. Sync Binance Futures exchangeInfo
+  try {
+    const fapiData = await fetchWithRetry(FAPI_EXCHANGE_URL);
+    if (Array.isArray(fapiData?.symbols) && fapiData.symbols.length > 0) {
+      fapiData.synced_at = now.toISOString();
+      fapiData.synced_label_th = thaiLabel;
+      fs.writeFileSync(FUTURES_OUTPUT_FILE, JSON.stringify(fapiData), "utf8");
+      console.log(`✓ Successfully updated ${FUTURES_OUTPUT_FILE} (${fapiData.symbols.length} symbols)`);
     }
+  } catch (error) {
+    console.error(`✗ Binance Futures exchangeInfo fetch failed:`, error.message);
   }
 }
 

@@ -1,51 +1,51 @@
 {
   "data": {
-    "value": 171.32,
-    "value_24h_percentage_change": -0.44,
-    "last_update": "2026-10-06T04:05:00.000Z",
-    "next_update": "2026-10-06T04:10:00.000Z",
+    "value": 167.69,
+    "value_24h_percentage_change": -2,
+    "last_update": "2026-10-07T03:35:00.000Z",
+    "next_update": "2026-10-07T03:40:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 66.16
+        "weight": 66.41
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 12.69
+        "weight": 12.53
       },
       {
         "id": 1839,
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 4
+        "weight": 4.01
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.64
+        "weight": 3.63
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.72
+        "weight": 2.74
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.23
+        "weight": 1.24
       },
       {
         "id": 32196,
@@ -59,21 +59,21 @@
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.87
+        "weight": 0.88
       },
       {
         "id": 74,
         "name": "Dogecoin",
         "symbol": "DOGE",
         "url": "https://coinmarketcap.com/currencies/dogecoin",
-        "weight": 0.63
+        "weight": 0.55
       },
       {
         "id": 328,
         "name": "Monero",
         "symbol": "XMR",
         "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.41
+        "weight": 0.42
       },
       {
         "id": 1975,
@@ -87,28 +87,28 @@
         "name": "Cardano",
         "symbol": "ADA",
         "url": "https://coinmarketcap.com/currencies/cardano",
-        "weight": 0.38
+        "weight": 0.37
       },
       {
         "id": 3957,
         "name": "UNUS SED LEO",
         "symbol": "LEO",
         "url": "https://coinmarketcap.com/currencies/unus-sed-leo",
-        "weight": 0.31
+        "weight": 0.32
       },
       {
         "id": 512,
         "name": "Stellar",
         "symbol": "XLM",
         "url": "https://coinmarketcap.com/currencies/stellar",
-        "weight": 0.29
+        "weight": 0.28
       },
       {
         "id": 6535,
         "name": "NEAR Protocol",
         "symbol": "NEAR",
         "url": "https://coinmarketcap.com/currencies/near-protocol",
-        "weight": 0.26
+        "weight": 0.25
       },
       {
         "id": 1831,
@@ -129,7 +129,7 @@
         "name": "Uniswap",
         "symbol": "UNI",
         "url": "https://coinmarketcap.com/currencies/uniswap",
-        "weight": 0.21
+        "weight": 0.2
       },
       {
         "id": 37263,
@@ -167,13 +167,6 @@
         "weight": 0.16
       },
       {
-        "id": 3635,
-        "name": "Cronos",
-        "symbol": "CRO",
-        "url": "https://coinmarketcap.com/currencies/cronos",
-        "weight": 0.13
-      },
-      {
         "id": 5994,
         "name": "Shiba Inu",
         "symbol": "SHIB",
@@ -188,11 +181,18 @@
         "weight": 0.13
       },
       {
-        "id": 30171,
-        "name": "Ethena",
-        "symbol": "ENA",
-        "url": "https://coinmarketcap.com/currencies/ethena",
-        "weight": 0.13
+        "id": 3635,
+        "name": "Cronos",
+        "symbol": "CRO",
+        "url": "https://coinmarketcap.com/currencies/cronos",
+        "weight": 0.12
+      },
+      {
+        "id": 5176,
+        "name": "Tether Gold",
+        "symbol": "XAUt",
+        "url": "https://coinmarketcap.com/currencies/tether-gold",
+        "weight": 0.12
       },
       {
         "id": 3155,
@@ -202,11 +202,11 @@
         "weight": 0.12
       },
       {
-        "id": 5176,
-        "name": "Tether Gold",
-        "symbol": "XAUt",
-        "url": "https://coinmarketcap.com/currencies/tether-gold",
-        "weight": 0.11
+        "id": 30171,
+        "name": "Ethena",
+        "symbol": "ENA",
+        "url": "https://coinmarketcap.com/currencies/ethena",
+        "weight": 0.12
       },
       {
         "id": 3897,
@@ -307,17 +307,17 @@
         "weight": 0.07
       },
       {
-        "id": 34104,
-        "name": "Morpho",
-        "symbol": "MORPHO",
-        "url": "https://coinmarketcap.com/currencies/morpho",
-        "weight": 0.06
-      },
-      {
         "id": 1321,
         "name": "Ethereum Classic",
         "symbol": "ETC",
         "url": "https://coinmarketcap.com/currencies/ethereum-classic",
+        "weight": 0.05
+      },
+      {
+        "id": 34104,
+        "name": "Morpho",
+        "symbol": "MORPHO",
+        "url": "https://coinmarketcap.com/currencies/morpho",
         "weight": 0.05
       },
       {
@@ -332,6 +332,13 @@
         "name": "Bitget Token",
         "symbol": "BGB",
         "url": "https://coinmarketcap.com/currencies/bitget-token-new",
+        "weight": 0.05
+      },
+      {
+        "id": 5488,
+        "name": "JUST",
+        "symbol": "JST",
+        "url": "https://coinmarketcap.com/currencies/just",
         "weight": 0.05
       },
       {
@@ -374,13 +381,6 @@
         "name": "Render",
         "symbol": "RENDER",
         "url": "https://coinmarketcap.com/currencies/render",
-        "weight": 0.04
-      },
-      {
-        "id": 5488,
-        "name": "JUST",
-        "symbol": "JST",
-        "url": "https://coinmarketcap.com/currencies/just",
         "weight": 0.04
       },
       {
@@ -594,13 +594,6 @@
         "weight": 0.02
       },
       {
-        "id": 28081,
-        "name": "SPX6900",
-        "symbol": "SPX",
-        "url": "https://coinmarketcap.com/currencies/spx6900",
-        "weight": 0.02
-      },
-      {
         "id": 3773,
         "name": "Artificial Superintelligence Alliance",
         "symbol": "FET",
@@ -685,6 +678,13 @@
         "weight": 0.01
       },
       {
+        "id": 28081,
+        "name": "SPX6900",
+        "symbol": "SPX",
+        "url": "https://coinmarketcap.com/currencies/spx6900",
+        "weight": 0.01
+      },
+      {
         "id": 16086,
         "name": "BitTorrent [New]",
         "symbol": "BTT",
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-10-06T04:10:15.889Z",
+    "timestamp": "2026-10-07T03:37:40.899Z",
     "error_code": "0",
     "error_message": "",
     "elapsed": 2,
     "credit_count": 1
   },
-  "synced_at": "2026-10-06T04:10:15.389Z",
+  "synced_at": "2026-10-07T03:37:40.624Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "6 ต.ค. 2026 11:10 น. (เวลาไทย)"
+  "synced_label_th": "7 ต.ค. 2026 10:37 น. (เวลาไทย)"
 }

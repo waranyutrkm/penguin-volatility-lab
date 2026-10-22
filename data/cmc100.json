@@ -1,23 +1,23 @@
 {
   "data": {
-    "value": 162.29,
-    "value_24h_percentage_change": 1.73,
-    "last_update": "2026-10-21T02:45:00.000Z",
-    "next_update": "2026-10-21T02:50:00.000Z",
+    "value": 162.51,
+    "value_24h_percentage_change": 0.14,
+    "last_update": "2026-10-22T02:40:00.000Z",
+    "next_update": "2026-10-22T02:45:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 67.54
+        "weight": 67.6
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 12.14
+        "weight": 12.1
       },
       {
         "id": 1839,
@@ -31,56 +31,56 @@
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.42
+        "weight": 3.45
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.54
+        "weight": 2.52
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.28
+        "weight": 1.27
       },
       {
         "id": 1437,
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.87
+        "weight": 0.89
       },
       {
         "id": 32196,
         "name": "Hyperliquid",
         "symbol": "HYPE",
         "url": "https://coinmarketcap.com/currencies/hyperliquid",
-        "weight": 0.84
+        "weight": 0.82
       },
       {
         "id": 74,
         "name": "Dogecoin",
         "symbol": "DOGE",
         "url": "https://coinmarketcap.com/currencies/dogecoin",
-        "weight": 0.57
+        "weight": 0.56
       },
       {
         "id": 328,
         "name": "Monero",
         "symbol": "XMR",
         "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.44
+        "weight": 0.47
       },
       {
         "id": 1975,
         "name": "Chainlink",
         "symbol": "LINK",
         "url": "https://coinmarketcap.com/currencies/chainlink",
-        "weight": 0.38
+        "weight": 0.37
       },
       {
         "id": 3957,
@@ -129,7 +129,7 @@
         "name": "Uniswap",
         "symbol": "UNI",
         "url": "https://coinmarketcap.com/currencies/uniswap",
-        "weight": 0.19
+        "weight": 0.18
       },
       {
         "id": 37263,
@@ -153,17 +153,17 @@
         "weight": 0.17
       },
       {
-        "id": 11419,
-        "name": "Gram (prev. Toncoin)",
-        "symbol": "GRAM",
-        "url": "https://coinmarketcap.com/currencies/gram",
-        "weight": 0.16
-      },
-      {
         "id": 4642,
         "name": "Hedera",
         "symbol": "HBAR",
         "url": "https://coinmarketcap.com/currencies/hedera",
+        "weight": 0.15
+      },
+      {
+        "id": 11419,
+        "name": "Gram (prev. Toncoin)",
+        "symbol": "GRAM",
+        "url": "https://coinmarketcap.com/currencies/gram",
         "weight": 0.15
       },
       {
@@ -220,7 +220,7 @@
         "name": "Aave",
         "symbol": "AAVE",
         "url": "https://coinmarketcap.com/currencies/aave",
-        "weight": 0.1
+        "weight": 0.09
       },
       {
         "id": 36507,
@@ -293,18 +293,18 @@
         "weight": 0.07
       },
       {
-        "id": 8916,
-        "name": "Internet Computer",
-        "symbol": "ICP",
-        "url": "https://coinmarketcap.com/currencies/internet-computer",
-        "weight": 0.07
-      },
-      {
         "id": 33251,
         "name": "World Liberty Financial",
         "symbol": "WLFI",
         "url": "https://coinmarketcap.com/currencies/world-liberty-financial-wlfi",
         "weight": 0.07
+      },
+      {
+        "id": 8916,
+        "name": "Internet Computer",
+        "symbol": "ICP",
+        "url": "https://coinmarketcap.com/currencies/internet-computer",
+        "weight": 0.06
       },
       {
         "id": 1321,
@@ -363,13 +363,6 @@
         "weight": 0.04
       },
       {
-        "id": 7226,
-        "name": "Injective",
-        "symbol": "INJ",
-        "url": "https://coinmarketcap.com/currencies/injective",
-        "weight": 0.04
-      },
-      {
         "id": 5690,
         "name": "Render",
         "symbol": "RENDER",
@@ -419,10 +412,10 @@
         "weight": 0.04
       },
       {
-        "id": 2280,
-        "name": "Filecoin",
-        "symbol": "FIL",
-        "url": "https://coinmarketcap.com/currencies/filecoin",
+        "id": 39125,
+        "name": "Lighter",
+        "symbol": "LIT",
+        "url": "https://coinmarketcap.com/currencies/lighter",
         "weight": 0.04
       },
       {
@@ -430,13 +423,6 @@
         "name": "VeChain",
         "symbol": "VET",
         "url": "https://coinmarketcap.com/currencies/vechain",
-        "weight": 0.03
-      },
-      {
-        "id": 28177,
-        "name": "Pyth Network",
-        "symbol": "PYTH",
-        "url": "https://coinmarketcap.com/currencies/pyth-network",
         "weight": 0.03
       },
       {
@@ -451,6 +437,13 @@
         "name": "Aptos",
         "symbol": "APT",
         "url": "https://coinmarketcap.com/currencies/aptos",
+        "weight": 0.03
+      },
+      {
+        "id": 7226,
+        "name": "Injective",
+        "symbol": "INJ",
+        "url": "https://coinmarketcap.com/currencies/injective",
         "weight": 0.03
       },
       {
@@ -489,6 +482,13 @@
         "weight": 0.03
       },
       {
+        "id": 6538,
+        "name": "Curve DAO Token",
+        "symbol": "CRV",
+        "url": "https://coinmarketcap.com/currencies/curve-dao-token",
+        "weight": 0.03
+      },
+      {
         "id": 39064,
         "name": "Midnight",
         "symbol": "NIGHT",
@@ -496,10 +496,10 @@
         "weight": 0.03
       },
       {
-        "id": 39125,
-        "name": "Lighter",
-        "symbol": "LIT",
-        "url": "https://coinmarketcap.com/currencies/lighter",
+        "id": 2280,
+        "name": "Filecoin",
+        "symbol": "FIL",
+        "url": "https://coinmarketcap.com/currencies/filecoin",
         "weight": 0.03
       },
       {
@@ -531,6 +531,13 @@
         "weight": 0.02
       },
       {
+        "id": 28177,
+        "name": "Pyth Network",
+        "symbol": "PYTH",
+        "url": "https://coinmarketcap.com/currencies/pyth-network",
+        "weight": 0.02
+      },
+      {
         "id": 22861,
         "name": "Celestia",
         "symbol": "TIA",
@@ -545,13 +552,6 @@
         "weight": 0.02
       },
       {
-        "id": 38482,
-        "name": "Falcon Finance",
-        "symbol": "FF",
-        "url": "https://coinmarketcap.com/currencies/falcon-finance-ff",
-        "weight": 0.02
-      },
-      {
         "id": 23149,
         "name": "Sei",
         "symbol": "SEI",
@@ -563,13 +563,6 @@
         "name": "Nexo",
         "symbol": "NEXO",
         "url": "https://coinmarketcap.com/currencies/nexo",
-        "weight": 0.02
-      },
-      {
-        "id": 6538,
-        "name": "Curve DAO Token",
-        "symbol": "CRV",
-        "url": "https://coinmarketcap.com/currencies/curve-dao-token",
         "weight": 0.02
       },
       {
@@ -650,6 +643,13 @@
         "weight": 0.01
       },
       {
+        "id": 38482,
+        "name": "Falcon Finance",
+        "symbol": "FF",
+        "url": "https://coinmarketcap.com/currencies/falcon-finance-ff",
+        "weight": 0.01
+      },
+      {
         "id": 10603,
         "name": "Immutable",
         "symbol": "IMX",
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-10-21T02:46:29.583Z",
+    "timestamp": "2026-10-22T02:45:09.511Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 2,
+    "elapsed": 3,
     "credit_count": 1
   },
-  "synced_at": "2026-10-21T02:46:29.387Z",
+  "synced_at": "2026-10-22T02:45:09.321Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "21 ต.ค. 2026 09:46 น. (เวลาไทย)"
+  "synced_label_th": "22 ต.ค. 2026 09:45 น. (เวลาไทย)"
 }

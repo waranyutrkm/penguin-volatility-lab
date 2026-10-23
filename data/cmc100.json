@@ -1,65 +1,65 @@
 {
   "data": {
-    "value": 162.51,
-    "value_24h_percentage_change": 0.14,
-    "last_update": "2026-10-22T02:40:00.000Z",
-    "next_update": "2026-10-22T02:45:00.000Z",
+    "value": 160.22,
+    "value_24h_percentage_change": -1.27,
+    "last_update": "2026-10-23T02:45:00.000Z",
+    "next_update": "2026-10-23T02:50:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 67.6
+        "weight": 67.63
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 12.1
+        "weight": 12.11
       },
       {
         "id": 1839,
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 3.96
+        "weight": 3.99
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.45
+        "weight": 3.43
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.52
+        "weight": 2.53
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.27
+        "weight": 1.29
       },
       {
         "id": 1437,
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.89
+        "weight": 0.85
       },
       {
         "id": 32196,
         "name": "Hyperliquid",
         "symbol": "HYPE",
         "url": "https://coinmarketcap.com/currencies/hyperliquid",
-        "weight": 0.82
+        "weight": 0.81
       },
       {
         "id": 74,
@@ -115,7 +115,7 @@
         "name": "Bitcoin Cash",
         "symbol": "BCH",
         "url": "https://coinmarketcap.com/currencies/bitcoin-cash",
-        "weight": 0.23
+        "weight": 0.24
       },
       {
         "id": 2,
@@ -213,7 +213,7 @@
         "name": "Quant",
         "symbol": "QNT",
         "url": "https://coinmarketcap.com/currencies/quant",
-        "weight": 0.1
+        "weight": 0.09
       },
       {
         "id": 7278,
@@ -251,6 +251,13 @@
         "weight": 0.08
       },
       {
+        "id": 35491,
+        "name": "MemeCore",
+        "symbol": "M",
+        "url": "https://coinmarketcap.com/currencies/memecore",
+        "weight": 0.08
+      },
+      {
         "id": 6636,
         "name": "Polkadot",
         "symbol": "DOT",
@@ -276,13 +283,6 @@
         "name": "PAX Gold",
         "symbol": "PAXG",
         "url": "https://coinmarketcap.com/currencies/pax-gold",
-        "weight": 0.07
-      },
-      {
-        "id": 35491,
-        "name": "MemeCore",
-        "symbol": "M",
-        "url": "https://coinmarketcap.com/currencies/memecore",
         "weight": 0.07
       },
       {
@@ -370,6 +370,13 @@
         "weight": 0.04
       },
       {
+        "id": 29270,
+        "name": "Aerodrome Finance",
+        "symbol": "AERO",
+        "url": "https://coinmarketcap.com/currencies/aerodrome-finance",
+        "weight": 0.04
+      },
+      {
         "id": 35697,
         "name": "Pi",
         "symbol": "PI",
@@ -454,13 +461,6 @@
         "weight": 0.03
       },
       {
-        "id": 29270,
-        "name": "Aerodrome Finance",
-        "symbol": "AERO",
-        "url": "https://coinmarketcap.com/currencies/aerodrome-finance",
-        "weight": 0.03
-      },
-      {
         "id": 26997,
         "name": "LayerZero",
         "symbol": "ZRO",
@@ -482,13 +482,6 @@
         "weight": 0.03
       },
       {
-        "id": 6538,
-        "name": "Curve DAO Token",
-        "symbol": "CRV",
-        "url": "https://coinmarketcap.com/currencies/curve-dao-token",
-        "weight": 0.03
-      },
-      {
         "id": 39064,
         "name": "Midnight",
         "symbol": "NIGHT",
@@ -503,24 +496,10 @@
         "weight": 0.03
       },
       {
-        "id": 4847,
-        "name": "Stacks",
-        "symbol": "STX",
-        "url": "https://coinmarketcap.com/currencies/stacks",
-        "weight": 0.03
-      },
-      {
         "id": 35336,
         "name": "OFFICIAL TRUMP",
         "symbol": "TRUMP",
         "url": "https://coinmarketcap.com/currencies/official-trump",
-        "weight": 0.02
-      },
-      {
-        "id": 9481,
-        "name": "Pendle",
-        "symbol": "PENDLE",
-        "url": "https://coinmarketcap.com/currencies/pendle",
         "weight": 0.02
       },
       {
@@ -566,6 +545,13 @@
         "weight": 0.02
       },
       {
+        "id": 6538,
+        "name": "Curve DAO Token",
+        "symbol": "CRV",
+        "url": "https://coinmarketcap.com/currencies/curve-dao-token",
+        "weight": 0.02
+      },
+      {
         "id": 34466,
         "name": "Pudgy Penguins",
         "symbol": "PENGU",
@@ -599,6 +585,20 @@
         "symbol": "STABLE",
         "url": "https://coinmarketcap.com/currencies/stable",
         "weight": 0.02
+      },
+      {
+        "id": 4847,
+        "name": "Stacks",
+        "symbol": "STX",
+        "url": "https://coinmarketcap.com/currencies/stacks",
+        "weight": 0.02
+      },
+      {
+        "id": 9481,
+        "name": "Pendle",
+        "symbol": "PENDLE",
+        "url": "https://coinmarketcap.com/currencies/pendle",
+        "weight": 0.01
       },
       {
         "id": 3602,
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-10-22T02:45:09.511Z",
+    "timestamp": "2026-10-23T02:49:07.860Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 3,
+    "elapsed": 2,
     "credit_count": 1
   },
-  "synced_at": "2026-10-22T02:45:09.321Z",
+  "synced_at": "2026-10-23T02:48:52.449Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "22 ต.ค. 2026 09:45 น. (เวลาไทย)"
+  "synced_label_th": "23 ต.ค. 2026 09:48 น. (เวลาไทย)"
 }

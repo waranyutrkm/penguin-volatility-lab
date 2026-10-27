@@ -1,9 +1,9 @@
 {
   "data": {
-    "value": 155.57,
-    "value_24h_percentage_change": -1.6,
-    "last_update": "2026-10-26T02:30:00.000Z",
-    "next_update": "2026-10-26T02:35:00.000Z",
+    "value": 155.82,
+    "value_24h_percentage_change": 0.13,
+    "last_update": "2026-10-27T03:05:00.000Z",
+    "next_update": "2026-10-27T03:10:00.000Z",
     "constituents": [
       {
         "id": 1,
@@ -24,56 +24,56 @@
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 4.1
+        "weight": 4.11
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.46
+        "weight": 3.48
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.52
+        "weight": 2.5
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.33
+        "weight": 1.32
       },
       {
         "id": 1437,
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.86
+        "weight": 0.88
       },
       {
         "id": 32196,
         "name": "Hyperliquid",
         "symbol": "HYPE",
         "url": "https://coinmarketcap.com/currencies/hyperliquid",
-        "weight": 0.82
+        "weight": 0.83
       },
       {
         "id": 74,
         "name": "Dogecoin",
         "symbol": "DOGE",
         "url": "https://coinmarketcap.com/currencies/dogecoin",
-        "weight": 0.56
+        "weight": 0.51
       },
       {
         "id": 328,
         "name": "Monero",
         "symbol": "XMR",
         "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.47
+        "weight": 0.48
       },
       {
         "id": 1975,
@@ -94,7 +94,7 @@
         "name": "Cardano",
         "symbol": "ADA",
         "url": "https://coinmarketcap.com/currencies/cardano",
-        "weight": 0.31
+        "weight": 0.32
       },
       {
         "id": 512,
@@ -129,7 +129,7 @@
         "name": "Uniswap",
         "symbol": "UNI",
         "url": "https://coinmarketcap.com/currencies/uniswap",
-        "weight": 0.18
+        "weight": 0.19
       },
       {
         "id": 37263,
@@ -153,13 +153,6 @@
         "weight": 0.16
       },
       {
-        "id": 11419,
-        "name": "Gram (prev. Toncoin)",
-        "symbol": "GRAM",
-        "url": "https://coinmarketcap.com/currencies/gram",
-        "weight": 0.15
-      },
-      {
         "id": 4642,
         "name": "Hedera",
         "symbol": "HBAR",
@@ -167,11 +160,11 @@
         "weight": 0.14
       },
       {
-        "id": 3635,
-        "name": "Cronos",
-        "symbol": "CRO",
-        "url": "https://coinmarketcap.com/currencies/cronos",
-        "weight": 0.12
+        "id": 11419,
+        "name": "Gram (prev. Toncoin)",
+        "symbol": "GRAM",
+        "url": "https://coinmarketcap.com/currencies/gram",
+        "weight": 0.14
       },
       {
         "id": 5176,
@@ -200,6 +193,13 @@
         "symbol": "ENA",
         "url": "https://coinmarketcap.com/currencies/ethena",
         "weight": 0.12
+      },
+      {
+        "id": 3635,
+        "name": "Cronos",
+        "symbol": "CRO",
+        "url": "https://coinmarketcap.com/currencies/cronos",
+        "weight": 0.11
       },
       {
         "id": 3897,
@@ -244,6 +244,13 @@
         "weight": 0.08
       },
       {
+        "id": 24478,
+        "name": "Pepe",
+        "symbol": "PEPE",
+        "url": "https://coinmarketcap.com/currencies/pepe",
+        "weight": 0.08
+      },
+      {
         "id": 21159,
         "name": "Ondo",
         "symbol": "ONDO",
@@ -256,20 +263,6 @@
         "symbol": "ASTER",
         "url": "https://coinmarketcap.com/currencies/aster",
         "weight": 0.08
-      },
-      {
-        "id": 33038,
-        "name": "Sky",
-        "symbol": "SKY",
-        "url": "https://coinmarketcap.com/currencies/sky",
-        "weight": 0.07
-      },
-      {
-        "id": 24478,
-        "name": "Pepe",
-        "symbol": "PEPE",
-        "url": "https://coinmarketcap.com/currencies/pepe",
-        "weight": 0.07
       },
       {
         "id": 13502,
@@ -300,6 +293,20 @@
         "weight": 0.07
       },
       {
+        "id": 33038,
+        "name": "Sky",
+        "symbol": "SKY",
+        "url": "https://coinmarketcap.com/currencies/sky",
+        "weight": 0.06
+      },
+      {
+        "id": 11092,
+        "name": "Bitget Token",
+        "symbol": "BGB",
+        "url": "https://coinmarketcap.com/currencies/bitget-token-new",
+        "weight": 0.06
+      },
+      {
         "id": 8916,
         "name": "Internet Computer",
         "symbol": "ICP",
@@ -325,13 +332,6 @@
         "name": "Arbitrum",
         "symbol": "ARB",
         "url": "https://coinmarketcap.com/currencies/arbitrum",
-        "weight": 0.05
-      },
-      {
-        "id": 11092,
-        "name": "Bitget Token",
-        "symbol": "BGB",
-        "url": "https://coinmarketcap.com/currencies/bitget-token-new",
         "weight": 0.05
       },
       {
@@ -573,13 +573,6 @@
         "weight": 0.02
       },
       {
-        "id": 16086,
-        "name": "BitTorrent [New]",
-        "symbol": "BTT",
-        "url": "https://coinmarketcap.com/currencies/bittorrent-new",
-        "weight": 0.02
-      },
-      {
         "id": 29420,
         "name": "Virtuals Protocol",
         "symbol": "VIRTUAL",
@@ -692,6 +685,13 @@
         "weight": 0.01
       },
       {
+        "id": 16086,
+        "name": "BitTorrent [New]",
+        "symbol": "BTT",
+        "url": "https://coinmarketcap.com/currencies/bittorrent-new",
+        "weight": 0.01
+      },
+      {
         "id": 2011,
         "name": "Tezos",
         "symbol": "XTZ",
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-10-26T02:35:09.787Z",
+    "timestamp": "2026-10-27T03:09:43.263Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 2,
+    "elapsed": 4,
     "credit_count": 1
   },
-  "synced_at": "2026-10-26T02:35:09.544Z",
+  "synced_at": "2026-10-27T03:09:42.962Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "26 ต.ค. 2026 09:35 น. (เวลาไทย)"
+  "synced_label_th": "27 ต.ค. 2026 10:09 น. (เวลาไทย)"
 }

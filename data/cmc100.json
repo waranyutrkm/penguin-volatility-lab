@@ -1,44 +1,44 @@
 {
   "data": {
-    "value": 150.28,
-    "value_24h_percentage_change": -2.14,
-    "last_update": "2026-11-03T04:45:00.000Z",
-    "next_update": "2026-11-03T04:50:00.000Z",
+    "value": 150.04,
+    "value_24h_percentage_change": 0.03,
+    "last_update": "2026-11-04T04:10:00.000Z",
+    "next_update": "2026-11-04T04:15:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 67.79
+        "weight": 67.71
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 12.08
+        "weight": 12.12
       },
       {
         "id": 1839,
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 4.02
+        "weight": 3.97
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.48
+        "weight": 3.51
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.39
+        "weight": 2.37
       },
       {
         "id": 1958,
@@ -59,7 +59,14 @@
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.85
+        "weight": 0.9
+      },
+      {
+        "id": 328,
+        "name": "Monero",
+        "symbol": "XMR",
+        "url": "https://coinmarketcap.com/currencies/monero",
+        "weight": 0.52
       },
       {
         "id": 74,
@@ -67,13 +74,6 @@
         "symbol": "DOGE",
         "url": "https://coinmarketcap.com/currencies/dogecoin",
         "weight": 0.51
-      },
-      {
-        "id": 328,
-        "name": "Monero",
-        "symbol": "XMR",
-        "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.5
       },
       {
         "id": 3957,
@@ -122,7 +122,7 @@
         "name": "Uniswap",
         "symbol": "UNI",
         "url": "https://coinmarketcap.com/currencies/uniswap",
-        "weight": 0.19
+        "weight": 0.2
       },
       {
         "id": 2,
@@ -136,7 +136,7 @@
         "name": "Canton",
         "symbol": "CC",
         "url": "https://coinmarketcap.com/currencies/canton-network",
-        "weight": 0.16
+        "weight": 0.17
       },
       {
         "id": 5805,
@@ -157,14 +157,14 @@
         "name": "Gram (prev. Toncoin)",
         "symbol": "GRAM",
         "url": "https://coinmarketcap.com/currencies/gram",
-        "weight": 0.15
+        "weight": 0.14
       },
       {
         "id": 4642,
         "name": "Hedera",
         "symbol": "HBAR",
         "url": "https://coinmarketcap.com/currencies/hedera",
-        "weight": 0.14
+        "weight": 0.13
       },
       {
         "id": 5176,
@@ -335,6 +335,13 @@
         "weight": 0.05
       },
       {
+        "id": 29270,
+        "name": "Aero",
+        "symbol": "AERO",
+        "url": "https://coinmarketcap.com/currencies/aerodrome-finance",
+        "weight": 0.05
+      },
+      {
         "id": 5488,
         "name": "JUST",
         "symbol": "JST",
@@ -398,6 +405,13 @@
         "weight": 0.04
       },
       {
+        "id": 39125,
+        "name": "Lighter",
+        "symbol": "LIT",
+        "url": "https://coinmarketcap.com/currencies/lighter",
+        "weight": 0.04
+      },
+      {
         "id": 7186,
         "name": "PancakeSwap",
         "symbol": "CAKE",
@@ -426,13 +440,6 @@
         "weight": 0.03
       },
       {
-        "id": 29270,
-        "name": "Aero",
-        "symbol": "AERO",
-        "url": "https://coinmarketcap.com/currencies/aerodrome-finance",
-        "weight": 0.03
-      },
-      {
         "id": 26997,
         "name": "LayerZero",
         "symbol": "ZRO",
@@ -458,13 +465,6 @@
         "name": "Cosmos",
         "symbol": "ATOM",
         "url": "https://coinmarketcap.com/currencies/cosmos",
-        "weight": 0.03
-      },
-      {
-        "id": 39125,
-        "name": "Lighter",
-        "symbol": "LIT",
-        "url": "https://coinmarketcap.com/currencies/lighter",
         "weight": 0.03
       },
       {
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-11-03T04:49:16.841Z",
+    "timestamp": "2026-11-04T04:15:03.692Z",
     "error_code": "0",
     "error_message": "",
     "elapsed": 2,
     "credit_count": 1
   },
-  "synced_at": "2026-11-03T04:49:16.552Z",
+  "synced_at": "2026-11-04T04:14:58.362Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "3 พ.ย. 2026 11:49 น. (เวลาไทย)"
+  "synced_label_th": "4 พ.ย. 2026 11:14 น. (เวลาไทย)"
 }

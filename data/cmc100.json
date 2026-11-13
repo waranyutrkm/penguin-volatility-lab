@@ -1,58 +1,58 @@
 {
   "data": {
-    "value": 141.83,
-    "value_24h_percentage_change": -0.3,
-    "last_update": "2026-11-12T05:10:00.000Z",
-    "next_update": "2026-11-12T05:15:00.000Z",
+    "value": 133.25,
+    "value_24h_percentage_change": -6.21,
+    "last_update": "2026-11-13T04:25:00.000Z",
+    "next_update": "2026-11-13T04:30:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 68.79
+        "weight": 68.44
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 11.62
+        "weight": 11.65
       },
       {
         "id": 1839,
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 4.13
+        "weight": 4.12
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.08
+        "weight": 3.16
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.28
+        "weight": 2.29
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.4
+        "weight": 1.46
       },
       {
         "id": 32196,
         "name": "Hyperliquid",
         "symbol": "HYPE",
         "url": "https://coinmarketcap.com/currencies/hyperliquid",
-        "weight": 0.84
+        "weight": 0.88
       },
       {
         "id": 1437,
@@ -66,7 +66,7 @@
         "name": "Monero",
         "symbol": "XMR",
         "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.5
+        "weight": 0.49
       },
       {
         "id": 74,
@@ -80,41 +80,41 @@
         "name": "UNUS SED LEO",
         "symbol": "LEO",
         "url": "https://coinmarketcap.com/currencies/unus-sed-leo",
-        "weight": 0.39
+        "weight": 0.42
       },
       {
         "id": 1975,
         "name": "Chainlink",
         "symbol": "LINK",
         "url": "https://coinmarketcap.com/currencies/chainlink",
-        "weight": 0.35
+        "weight": 0.36
       },
       {
         "id": 2010,
         "name": "Cardano",
         "symbol": "ADA",
         "url": "https://coinmarketcap.com/currencies/cardano",
-        "weight": 0.3
+        "weight": 0.31
       },
       {
         "id": 512,
         "name": "Stellar",
         "symbol": "XLM",
         "url": "https://coinmarketcap.com/currencies/stellar",
-        "weight": 0.24
-      },
-      {
-        "id": 6535,
-        "name": "NEAR Protocol",
-        "symbol": "NEAR",
-        "url": "https://coinmarketcap.com/currencies/near-protocol",
-        "weight": 0.22
+        "weight": 0.25
       },
       {
         "id": 1831,
         "name": "Bitcoin Cash",
         "symbol": "BCH",
         "url": "https://coinmarketcap.com/currencies/bitcoin-cash",
+        "weight": 0.22
+      },
+      {
+        "id": 6535,
+        "name": "NEAR Protocol",
+        "symbol": "NEAR",
+        "url": "https://coinmarketcap.com/currencies/near-protocol",
         "weight": 0.21
       },
       {
@@ -122,7 +122,7 @@
         "name": "Litecoin",
         "symbol": "LTC",
         "url": "https://coinmarketcap.com/currencies/litecoin",
-        "weight": 0.18
+        "weight": 0.19
       },
       {
         "id": 7083,
@@ -209,10 +209,24 @@
         "weight": 0.09
       },
       {
+        "id": 4705,
+        "name": "PAX Gold",
+        "symbol": "PAXG",
+        "url": "https://coinmarketcap.com/currencies/pax-gold",
+        "weight": 0.09
+      },
+      {
         "id": 24478,
         "name": "Pepe",
         "symbol": "PEPE",
         "url": "https://coinmarketcap.com/currencies/pepe",
+        "weight": 0.09
+      },
+      {
+        "id": 35491,
+        "name": "MemeCore",
+        "symbol": "M",
+        "url": "https://coinmarketcap.com/currencies/memecore",
         "weight": 0.09
       },
       {
@@ -223,24 +237,17 @@
         "weight": 0.09
       },
       {
-        "id": 4705,
-        "name": "PAX Gold",
-        "symbol": "PAXG",
-        "url": "https://coinmarketcap.com/currencies/pax-gold",
-        "weight": 0.08
+        "id": 36341,
+        "name": "Aster",
+        "symbol": "ASTER",
+        "url": "https://coinmarketcap.com/currencies/aster",
+        "weight": 0.09
       },
       {
         "id": 7278,
         "name": "Aave",
         "symbol": "AAVE",
         "url": "https://coinmarketcap.com/currencies/aave",
-        "weight": 0.08
-      },
-      {
-        "id": 35491,
-        "name": "MemeCore",
-        "symbol": "M",
-        "url": "https://coinmarketcap.com/currencies/memecore",
         "weight": 0.08
       },
       {
@@ -251,11 +258,11 @@
         "weight": 0.08
       },
       {
-        "id": 36341,
-        "name": "Aster",
-        "symbol": "ASTER",
-        "url": "https://coinmarketcap.com/currencies/aster",
-        "weight": 0.08
+        "id": 33038,
+        "name": "Sky",
+        "symbol": "SKY",
+        "url": "https://coinmarketcap.com/currencies/sky",
+        "weight": 0.07
       },
       {
         "id": 36507,
@@ -293,17 +300,17 @@
         "weight": 0.07
       },
       {
-        "id": 33038,
-        "name": "Sky",
-        "symbol": "SKY",
-        "url": "https://coinmarketcap.com/currencies/sky",
-        "weight": 0.06
-      },
-      {
         "id": 11092,
         "name": "Bitget Token",
         "symbol": "BGB",
         "url": "https://coinmarketcap.com/currencies/bitget-token-new",
+        "weight": 0.06
+      },
+      {
+        "id": 5488,
+        "name": "JUST",
+        "symbol": "JST",
+        "url": "https://coinmarketcap.com/currencies/just",
         "weight": 0.06
       },
       {
@@ -328,24 +335,10 @@
         "weight": 0.05
       },
       {
-        "id": 5488,
-        "name": "JUST",
-        "symbol": "JST",
-        "url": "https://coinmarketcap.com/currencies/just",
-        "weight": 0.05
-      },
-      {
-        "id": 4269,
-        "name": "GateToken",
-        "symbol": "GT",
-        "url": "https://coinmarketcap.com/currencies/gatetoken",
-        "weight": 0.05
-      },
-      {
-        "id": 35509,
-        "name": "Venice Token",
-        "symbol": "VVV",
-        "url": "https://coinmarketcap.com/currencies/venice-token",
+        "id": 28321,
+        "name": "Polygon (prev. MATIC)",
+        "symbol": "POL",
+        "url": "https://coinmarketcap.com/currencies/polygon-ecosystem-token",
         "weight": 0.05
       },
       {
@@ -370,6 +363,13 @@
         "weight": 0.04
       },
       {
+        "id": 7226,
+        "name": "Injective",
+        "symbol": "INJ",
+        "url": "https://coinmarketcap.com/currencies/injective",
+        "weight": 0.04
+      },
+      {
         "id": 5690,
         "name": "Render",
         "symbol": "RENDER",
@@ -391,17 +391,24 @@
         "weight": 0.04
       },
       {
-        "id": 28321,
-        "name": "Polygon (prev. MATIC)",
-        "symbol": "POL",
-        "url": "https://coinmarketcap.com/currencies/polygon-ecosystem-token",
-        "weight": 0.04
-      },
-      {
         "id": 20396,
         "name": "Kaspa",
         "symbol": "KAS",
         "url": "https://coinmarketcap.com/currencies/kaspa",
+        "weight": 0.04
+      },
+      {
+        "id": 4269,
+        "name": "GateToken",
+        "symbol": "GT",
+        "url": "https://coinmarketcap.com/currencies/gatetoken",
+        "weight": 0.04
+      },
+      {
+        "id": 35509,
+        "name": "Venice Token",
+        "symbol": "VVV",
+        "url": "https://coinmarketcap.com/currencies/venice-token",
         "weight": 0.04
       },
       {
@@ -412,6 +419,13 @@
         "weight": 0.04
       },
       {
+        "id": 3794,
+        "name": "Cosmos",
+        "symbol": "ATOM",
+        "url": "https://coinmarketcap.com/currencies/cosmos",
+        "weight": 0.04
+      },
+      {
         "id": 39125,
         "name": "Lighter",
         "symbol": "LIT",
@@ -419,17 +433,17 @@
         "weight": 0.04
       },
       {
+        "id": 28177,
+        "name": "Pyth Network",
+        "symbol": "PYTH",
+        "url": "https://coinmarketcap.com/currencies/pyth-network",
+        "weight": 0.03
+      },
+      {
         "id": 7186,
         "name": "PancakeSwap",
         "symbol": "CAKE",
         "url": "https://coinmarketcap.com/currencies/pancakeswap",
-        "weight": 0.03
-      },
-      {
-        "id": 7226,
-        "name": "Injective",
-        "symbol": "INJ",
-        "url": "https://coinmarketcap.com/currencies/injective",
         "weight": 0.03
       },
       {
@@ -461,20 +475,6 @@
         "weight": 0.03
       },
       {
-        "id": 131,
-        "name": "Dash",
-        "symbol": "DASH",
-        "url": "https://coinmarketcap.com/currencies/dash",
-        "weight": 0.03
-      },
-      {
-        "id": 3794,
-        "name": "Cosmos",
-        "symbol": "ATOM",
-        "url": "https://coinmarketcap.com/currencies/cosmos",
-        "weight": 0.03
-      },
-      {
         "id": 2280,
         "name": "Filecoin",
         "symbol": "FIL",
@@ -503,10 +503,10 @@
         "weight": 0.02
       },
       {
-        "id": 28177,
-        "name": "Pyth Network",
-        "symbol": "PYTH",
-        "url": "https://coinmarketcap.com/currencies/pyth-network",
+        "id": 3602,
+        "name": "Bitcoin SV",
+        "symbol": "BSV",
+        "url": "https://coinmarketcap.com/currencies/bitcoin-sv",
         "weight": 0.02
       },
       {
@@ -535,6 +535,13 @@
         "name": "Sei",
         "symbol": "SEI",
         "url": "https://coinmarketcap.com/currencies/sei",
+        "weight": 0.02
+      },
+      {
+        "id": 131,
+        "name": "Dash",
+        "symbol": "DASH",
+        "url": "https://coinmarketcap.com/currencies/dash",
         "weight": 0.02
       },
       {
@@ -629,13 +636,6 @@
         "weight": 0.01
       },
       {
-        "id": 3602,
-        "name": "Bitcoin SV",
-        "symbol": "BSV",
-        "url": "https://coinmarketcap.com/currencies/bitcoin-sv",
-        "weight": 0.01
-      },
-      {
         "id": 10529,
         "name": "Sun [New]",
         "symbol": "SUN",
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-11-12T05:12:04.419Z",
+    "timestamp": "2026-11-13T04:28:02.724Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 4,
+    "elapsed": 2,
     "credit_count": 1
   },
-  "synced_at": "2026-11-12T05:11:58.982Z",
+  "synced_at": "2026-11-13T04:27:57.186Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "12 พ.ย. 2026 12:11 น. (เวลาไทย)"
+  "synced_label_th": "13 พ.ย. 2026 11:27 น. (เวลาไทย)"
 }

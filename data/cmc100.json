@@ -1,51 +1,51 @@
 {
   "data": {
-    "value": 125.81,
-    "value_24h_percentage_change": -0.36,
-    "last_update": "2026-11-18T05:20:00.000Z",
-    "next_update": "2026-11-18T05:25:00.000Z",
+    "value": 123.73,
+    "value_24h_percentage_change": -1.65,
+    "last_update": "2026-11-19T05:20:00.000Z",
+    "next_update": "2026-11-19T05:25:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 68.17
+        "weight": 67.9
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 11.6
+        "weight": 11.69
       },
       {
         "id": 1839,
         "name": "BNB",
         "symbol": "BNB",
         "url": "https://coinmarketcap.com/currencies/bnb",
-        "weight": 4.08
+        "weight": 4.11
       },
       {
         "id": 52,
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.27
+        "weight": 3.29
       },
       {
         "id": 5426,
         "name": "Solana",
         "symbol": "SOL",
         "url": "https://coinmarketcap.com/currencies/solana",
-        "weight": 2.33
+        "weight": 2.35
       },
       {
         "id": 1958,
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.53
+        "weight": 1.58
       },
       {
         "id": 32196,
@@ -80,7 +80,7 @@
         "name": "UNUS SED LEO",
         "symbol": "LEO",
         "url": "https://coinmarketcap.com/currencies/unus-sed-leo",
-        "weight": 0.45
+        "weight": 0.46
       },
       {
         "id": 1975,
@@ -108,7 +108,7 @@
         "name": "NEAR Protocol",
         "symbol": "NEAR",
         "url": "https://coinmarketcap.com/currencies/near-protocol",
-        "weight": 0.23
+        "weight": 0.24
       },
       {
         "id": 1831,
@@ -314,6 +314,13 @@
         "weight": 0.06
       },
       {
+        "id": 35509,
+        "name": "Venice Token",
+        "symbol": "VVV",
+        "url": "https://coinmarketcap.com/currencies/venice-token",
+        "weight": 0.06
+      },
+      {
         "id": 29210,
         "name": "Jupiter",
         "symbol": "JUP",
@@ -356,13 +363,6 @@
         "weight": 0.05
       },
       {
-        "id": 35509,
-        "name": "Venice Token",
-        "symbol": "VVV",
-        "url": "https://coinmarketcap.com/currencies/venice-token",
-        "weight": 0.05
-      },
-      {
         "id": 13502,
         "name": "Worldcoin",
         "symbol": "WLD",
@@ -381,13 +381,6 @@
         "name": "Render",
         "symbol": "RENDER",
         "url": "https://coinmarketcap.com/currencies/render",
-        "weight": 0.04
-      },
-      {
-        "id": 35697,
-        "name": "Pi",
-        "symbol": "PI",
-        "url": "https://coinmarketcap.com/currencies/pi",
         "weight": 0.04
       },
       {
@@ -419,6 +412,13 @@
         "weight": 0.04
       },
       {
+        "id": 38849,
+        "name": "Pieverse",
+        "symbol": "PIEVERSE",
+        "url": "https://coinmarketcap.com/currencies/pieverse",
+        "weight": 0.04
+      },
+      {
         "id": 3794,
         "name": "Cosmos",
         "symbol": "ATOM",
@@ -447,10 +447,24 @@
         "weight": 0.03
       },
       {
+        "id": 35697,
+        "name": "Pi",
+        "symbol": "PI",
+        "url": "https://coinmarketcap.com/currencies/pi",
+        "weight": 0.03
+      },
+      {
         "id": 26997,
         "name": "LayerZero",
         "symbol": "ZRO",
         "url": "https://coinmarketcap.com/currencies/layerzero",
+        "weight": 0.03
+      },
+      {
+        "id": 29814,
+        "name": "ether.fi",
+        "symbol": "ETHFI",
+        "url": "https://coinmarketcap.com/currencies/ether-fi-ethfi",
         "weight": 0.03
       },
       {
@@ -465,13 +479,6 @@
         "name": "币安人生",
         "symbol": "币安人生",
         "url": "https://coinmarketcap.com/currencies/bianrensheng",
-        "weight": 0.03
-      },
-      {
-        "id": 38849,
-        "name": "Pieverse",
-        "symbol": "PIEVERSE",
-        "url": "https://coinmarketcap.com/currencies/pieverse",
         "weight": 0.03
       },
       {
@@ -563,13 +570,6 @@
         "name": "Sei",
         "symbol": "SEI",
         "url": "https://coinmarketcap.com/currencies/sei",
-        "weight": 0.02
-      },
-      {
-        "id": 29814,
-        "name": "ether.fi",
-        "symbol": "ETHFI",
-        "url": "https://coinmarketcap.com/currencies/ether-fi-ethfi",
         "weight": 0.02
       },
       {
@@ -708,13 +708,13 @@
     ]
   },
   "status": {
-    "timestamp": "2026-11-18T05:25:18.679Z",
+    "timestamp": "2026-11-19T05:21:44.196Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 2,
+    "elapsed": 1,
     "credit_count": 1
   },
-  "synced_at": "2026-11-18T05:25:18.334Z",
+  "synced_at": "2026-11-19T05:21:43.974Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "18 พ.ย. 2026 12:25 น. (เวลาไทย)"
+  "synced_label_th": "19 พ.ย. 2026 12:21 น. (เวลาไทย)"
 }

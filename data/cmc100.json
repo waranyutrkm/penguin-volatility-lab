@@ -1,23 +1,23 @@
 {
   "data": {
-    "value": 123.73,
-    "value_24h_percentage_change": -1.65,
-    "last_update": "2026-11-19T05:20:00.000Z",
-    "next_update": "2026-11-19T05:25:00.000Z",
+    "value": 119.79,
+    "value_24h_percentage_change": -3.29,
+    "last_update": "2026-11-20T05:05:00.000Z",
+    "next_update": "2026-11-20T05:10:00.000Z",
     "constituents": [
       {
         "id": 1,
         "name": "Bitcoin",
         "symbol": "BTC",
         "url": "https://coinmarketcap.com/currencies/bitcoin",
-        "weight": 67.9
+        "weight": 68.05
       },
       {
         "id": 1027,
         "name": "Ethereum",
         "symbol": "ETH",
         "url": "https://coinmarketcap.com/currencies/ethereum",
-        "weight": 11.69
+        "weight": 11.6
       },
       {
         "id": 1839,
@@ -31,7 +31,7 @@
         "name": "XRP",
         "symbol": "XRP",
         "url": "https://coinmarketcap.com/currencies/xrp",
-        "weight": 3.29
+        "weight": 3.36
       },
       {
         "id": 5426,
@@ -45,28 +45,21 @@
         "name": "TRON",
         "symbol": "TRX",
         "url": "https://coinmarketcap.com/currencies/tron",
-        "weight": 1.58
+        "weight": 1.62
       },
       {
         "id": 32196,
         "name": "Hyperliquid",
         "symbol": "HYPE",
         "url": "https://coinmarketcap.com/currencies/hyperliquid",
-        "weight": 0.91
+        "weight": 0.9
       },
       {
         "id": 1437,
         "name": "Zcash",
         "symbol": "ZEC",
         "url": "https://coinmarketcap.com/currencies/zcash",
-        "weight": 0.85
-      },
-      {
-        "id": 328,
-        "name": "Monero",
-        "symbol": "XMR",
-        "url": "https://coinmarketcap.com/currencies/monero",
-        "weight": 0.5
+        "weight": 0.79
       },
       {
         "id": 74,
@@ -76,11 +69,18 @@
         "weight": 0.49
       },
       {
+        "id": 328,
+        "name": "Monero",
+        "symbol": "XMR",
+        "url": "https://coinmarketcap.com/currencies/monero",
+        "weight": 0.48
+      },
+      {
         "id": 3957,
         "name": "UNUS SED LEO",
         "symbol": "LEO",
         "url": "https://coinmarketcap.com/currencies/unus-sed-leo",
-        "weight": 0.46
+        "weight": 0.47
       },
       {
         "id": 1975,
@@ -104,17 +104,17 @@
         "weight": 0.26
       },
       {
-        "id": 6535,
-        "name": "NEAR Protocol",
-        "symbol": "NEAR",
-        "url": "https://coinmarketcap.com/currencies/near-protocol",
-        "weight": 0.24
-      },
-      {
         "id": 1831,
         "name": "Bitcoin Cash",
         "symbol": "BCH",
         "url": "https://coinmarketcap.com/currencies/bitcoin-cash",
+        "weight": 0.23
+      },
+      {
+        "id": 6535,
+        "name": "NEAR Protocol",
+        "symbol": "NEAR",
+        "url": "https://coinmarketcap.com/currencies/near-protocol",
         "weight": 0.22
       },
       {
@@ -129,13 +129,6 @@
         "name": "Canton",
         "symbol": "CC",
         "url": "https://coinmarketcap.com/currencies/canton-network",
-        "weight": 0.18
-      },
-      {
-        "id": 7083,
-        "name": "Uniswap",
-        "symbol": "UNI",
-        "url": "https://coinmarketcap.com/currencies/uniswap",
         "weight": 0.17
       },
       {
@@ -150,6 +143,13 @@
         "name": "Gram (prev. Toncoin)",
         "symbol": "GRAM",
         "url": "https://coinmarketcap.com/currencies/gram",
+        "weight": 0.16
+      },
+      {
+        "id": 7083,
+        "name": "Uniswap",
+        "symbol": "UNI",
+        "url": "https://coinmarketcap.com/currencies/uniswap",
         "weight": 0.16
       },
       {
@@ -195,13 +195,6 @@
         "weight": 0.12
       },
       {
-        "id": 35491,
-        "name": "MemeCore",
-        "symbol": "M",
-        "url": "https://coinmarketcap.com/currencies/memecore",
-        "weight": 0.11
-      },
-      {
         "id": 3897,
         "name": "OKB",
         "symbol": "OKB",
@@ -209,11 +202,18 @@
         "weight": 0.1
       },
       {
+        "id": 35491,
+        "name": "MemeCore",
+        "symbol": "M",
+        "url": "https://coinmarketcap.com/currencies/memecore",
+        "weight": 0.1
+      },
+      {
         "id": 3155,
         "name": "Quant",
         "symbol": "QNT",
         "url": "https://coinmarketcap.com/currencies/quant",
-        "weight": 0.1
+        "weight": 0.09
       },
       {
         "id": 4705,
@@ -272,13 +272,6 @@
         "weight": 0.07
       },
       {
-        "id": 8916,
-        "name": "Internet Computer",
-        "symbol": "ICP",
-        "url": "https://coinmarketcap.com/currencies/internet-computer",
-        "weight": 0.07
-      },
-      {
         "id": 6636,
         "name": "Polkadot",
         "symbol": "DOT",
@@ -321,11 +314,11 @@
         "weight": 0.06
       },
       {
-        "id": 29210,
-        "name": "Jupiter",
-        "symbol": "JUP",
-        "url": "https://coinmarketcap.com/currencies/jupiter-ag",
-        "weight": 0.05
+        "id": 8916,
+        "name": "Internet Computer",
+        "symbol": "ICP",
+        "url": "https://coinmarketcap.com/currencies/internet-computer",
+        "weight": 0.06
       },
       {
         "id": 2087,
@@ -349,13 +342,6 @@
         "weight": 0.05
       },
       {
-        "id": 11841,
-        "name": "Arbitrum",
-        "symbol": "ARB",
-        "url": "https://coinmarketcap.com/currencies/arbitrum",
-        "weight": 0.05
-      },
-      {
         "id": 28321,
         "name": "Polygon (prev. MATIC)",
         "symbol": "POL",
@@ -370,6 +356,20 @@
         "weight": 0.05
       },
       {
+        "id": 38849,
+        "name": "Pieverse",
+        "symbol": "PIEVERSE",
+        "url": "https://coinmarketcap.com/currencies/pieverse",
+        "weight": 0.05
+      },
+      {
+        "id": 29210,
+        "name": "Jupiter",
+        "symbol": "JUP",
+        "url": "https://coinmarketcap.com/currencies/jupiter-ag",
+        "weight": 0.04
+      },
+      {
         "id": 7226,
         "name": "Injective",
         "symbol": "INJ",
@@ -381,6 +381,13 @@
         "name": "Render",
         "symbol": "RENDER",
         "url": "https://coinmarketcap.com/currencies/render",
+        "weight": 0.04
+      },
+      {
+        "id": 11841,
+        "name": "Arbitrum",
+        "symbol": "ARB",
+        "url": "https://coinmarketcap.com/currencies/arbitrum",
         "weight": 0.04
       },
       {
@@ -409,13 +416,6 @@
         "name": "Algorand",
         "symbol": "ALGO",
         "url": "https://coinmarketcap.com/currencies/algorand",
-        "weight": 0.04
-      },
-      {
-        "id": 38849,
-        "name": "Pieverse",
-        "symbol": "PIEVERSE",
-        "url": "https://coinmarketcap.com/currencies/pieverse",
         "weight": 0.04
       },
       {
@@ -458,13 +458,6 @@
         "name": "LayerZero",
         "symbol": "ZRO",
         "url": "https://coinmarketcap.com/currencies/layerzero",
-        "weight": 0.03
-      },
-      {
-        "id": 29814,
-        "name": "ether.fi",
-        "symbol": "ETHFI",
-        "url": "https://coinmarketcap.com/currencies/ether-fi-ethfi",
         "weight": 0.03
       },
       {
@@ -573,6 +566,13 @@
         "weight": 0.02
       },
       {
+        "id": 29814,
+        "name": "ether.fi",
+        "symbol": "ETHFI",
+        "url": "https://coinmarketcap.com/currencies/ether-fi-ethfi",
+        "weight": 0.02
+      },
+      {
         "id": 2694,
         "name": "Nexo",
         "symbol": "NEXO",
@@ -619,13 +619,6 @@
         "name": "BitTorrent [New]",
         "symbol": "BTT",
         "url": "https://coinmarketcap.com/currencies/bittorrent-new",
-        "weight": 0.02
-      },
-      {
-        "id": 29420,
-        "name": "Virtuals Protocol",
-        "symbol": "VIRTUAL",
-        "url": "https://coinmarketcap.com/currencies/virtual-protocol",
         "weight": 0.02
       },
       {
@@ -704,17 +697,24 @@
         "symbol": "XTZ",
         "url": "https://coinmarketcap.com/currencies/tezos",
         "weight": 0.01
+      },
+      {
+        "id": 29420,
+        "name": "Virtuals Protocol",
+        "symbol": "VIRTUAL",
+        "url": "https://coinmarketcap.com/currencies/virtual-protocol",
+        "weight": 0.01
       }
     ]
   },
   "status": {
-    "timestamp": "2026-11-19T05:21:44.196Z",
+    "timestamp": "2026-11-20T05:08:43.021Z",
     "error_code": "0",
     "error_message": "",
-    "elapsed": 1,
+    "elapsed": 2,
     "credit_count": 1
   },
-  "synced_at": "2026-11-19T05:21:43.974Z",
+  "synced_at": "2026-11-20T05:08:42.720Z",
   "synced_by": "github-actions-daily-cron",
-  "synced_label_th": "19 พ.ย. 2026 12:21 น. (เวลาไทย)"
+  "synced_label_th": "20 พ.ย. 2026 12:08 น. (เวลาไทย)"
 }

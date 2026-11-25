@@ -1,0 +1,25 @@
+name: Penguin research
+on:
+  push:
+    branches: [research/penguin-v631-frequency-profile]
+    paths: ['research/run_v631.py', '.github/workflows/penguin-research.yml']
+  pull_request:
+    branches: [main]
+    paths: ['research/run_v631.py', '.github/workflows/penguin-research.yml']
+  workflow_dispatch:
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install 'numpy<2' 'pandas<3' 'vectorbt==0.28.1' 'plotly==5.24.1' requests
+      - run: python research/run_v631.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: penguin-research-results
+          path: research/results/

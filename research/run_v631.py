@@ -118,6 +118,23 @@ def causal_test():
     for kc in [1.5,2.0]:
         full=features(d,kc)[0]; prefix=features(d.iloc[:300],kc)[0]
         for k in full:pd.testing.assert_series_equal(full[k].iloc[:300],prefix[k])
+def detailed_events(d,sig,symbol,kc):
+    rows=[]
+    for name,s in sig.items():
+        side=-1 if name.endswith("_short") else 1
+        for i in np.flatnonzero(s.to_numpy()):
+            j=i+1
+            if j+168>=len(d):continue
+            entry=d.open.iloc[j]
+            split="IS" if d.index[i].year<2024 else "OOS"
+            for h in [1,5,12,24,48,72,120,168]:
+                if (d.index[j+h].year<2024)!=(split=="IS"):continue
+                w=d.iloc[j:j+h]
+                ret=side*(d.open.iloc[j+h]/entry-1)
+                mfe=(w.high.max()/entry-1) if side==1 else (1-w.low.min()/entry)
+                mae=(w.low.min()/entry-1) if side==1 else (1-w.high.max()/entry)
+                rows.append((symbol,kc,name,d.index[i],split,h,entry,ret,mfe,mae))
+    return pd.DataFrame(rows,columns=["symbol","kc","strategy","signal_time","split","horizon","entry","return","mfe","mae"])
 def run():
     results=[]; events=[]; errors=[]
     for symbol in ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT"]:
@@ -131,6 +148,7 @@ def run():
         print(f"Loaded {symbol}: {len(d)} bars {d.index.min()} to {d.index.max()}",flush=True)
         for kc in [1.5,2.0]:
             sig,bear,bd=features(d,kc)
+            detailed_events(d,sig,symbol,kc).to_csv(OUT/f"event_detail_{symbol}_{kc}.csv.gz",index=False)
             for name,s in sig.items():
                 short=name.endswith("_short")
                 for horizon in [1,5,10,24,72]:
@@ -150,6 +168,12 @@ def run():
                             if i>last and i+hold<len(z):en[i]=True;ex[i+hold]=True;last=i+hold
                         for fee in [.0005,.001,.002]:
                             pf=vbt.Portfolio.from_signals(z.close,en,ex,price=z.open,fees=fee,slippage=.0002,init_cash=10000,freq="1h",direction="shortonly" if short else "longonly")
+                            if fee==.001:
+                                orders=pf.orders.records_readable.copy(); trades=pf.trades.records_readable.copy()
+                                for frame,kind in [(orders,"orders"),(trades,"trades")]:
+                                    frame=frame.assign(symbol=symbol,kc=kc,strategy=name,split=split,hold=hold,fee=fee)
+                                    path=OUT/f"{kind}_{symbol}.csv.gz"
+                                    frame.to_csv(path,mode="a",header=not path.exists(),index=False)
                             daily=pf.value().resample("D").last().pct_change().dropna()
                             results.append(dict(symbol=symbol,kc=kc,strategy=name,split=split,hold=hold,fee=fee,trades=int(pf.trades.count()),return_pct=float(pf.total_return()*100),maxdd_pct=float(pf.max_drawdown()*100),sharpe=float(daily.mean()/daily.std()*np.sqrt(365)) if daily.std()>0 else np.nan,profit_factor=float(pf.trades.profit_factor()),positive_days=float((daily>0).mean())))
         print(f"Completed {symbol}: {len(results)} cumulative backtests",flush=True)

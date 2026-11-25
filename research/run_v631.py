@@ -24,7 +24,31 @@ def load(symbol):
     if not frames: raise ValueError("No data")
     d=pd.concat(frames).sort_index()
     if d.index.has_duplicates or (d.high<d[["open","close","low"]].max(axis=1)).any() or (d.low>d[["open","close","high"]].min(axis=1)).any(): raise ValueError("Invalid OHLC")
-    if (d.index.to_series().diff().dropna()!=pd.Timedelta(hours=1)).any(): raise ValueError("Missing bars")
+    if (d.index.to_series().diff().dropna()!=pd.Timedelta(hours=1)).any():
+        # Keep the longest contiguous observed segment; never fabricate candles.
+        groups=d.index.to_series().diff().ne(pd.Timedelta(hours=1)).cumsum()
+        counts=groups.value_counts(); d=d.loc[groups==counts.idxmax()]
+        if len(d)<8760:raise ValueError("No contiguous year of data")
+    return d
+def load_fallback(symbol):
+    # Public Binance market-data endpoint, same spot instrument.
+    start=int(pd.Timestamp("2020-01-01",tz="UTC").timestamp()*1000)
+    end=int(pd.Timestamp("2026-11-01",tz="UTC").timestamp()*1000)
+    rows=[]
+    session=requests.Session()
+    while start<end:
+        r=session.get("https://data-api.binance.vision/api/v3/klines",params=dict(symbol=symbol,interval="1h",startTime=start,endTime=end-1,limit=1000),timeout=30)
+        r.raise_for_status()
+        batch=r.json()
+        if not batch:break
+        rows.extend(x[:6] for x in batch)
+        nxt=int(batch[-1][0])+3600000
+        if nxt<=start:raise ValueError("Pagination stalled")
+        start=nxt
+    if not rows:raise ValueError("Empty API response")
+    d=pd.DataFrame(rows,columns=["timestamp","open","high","low","close","volume"]).astype(float)
+    d.index=pd.to_datetime(d.pop("timestamp"),unit="ms",utc=True)
+    if d.index.has_duplicates or (d.index.to_series().diff().dropna()!=pd.Timedelta(hours=1)).any():raise ValueError("API gaps or duplicates")
     return d
 def rma(s,n):
     x=s.dropna(); out=pd.Series(np.nan,index=s.index)
@@ -98,7 +122,13 @@ def run():
     results=[]; events=[]; errors=[]
     for symbol in ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT"]:
         try:d=load(symbol)
-        except Exception as e:errors.append({"symbol":symbol,"error":str(e)});continue
+        except Exception as e:
+            print(f"Binance archive {symbol}: {e!r}",flush=True)
+            try:d=load_fallback(symbol)
+            except Exception as e2:
+                print(f"Fallback {symbol}: {e2!r}",flush=True)
+                errors.append({"symbol":symbol,"error":str(e),"fallback_error":str(e2)});continue
+        print(f"Loaded {symbol}: {len(d)} bars {d.index.min()} to {d.index.max()}",flush=True)
         for kc in [1.5,2.0]:
             sig,bear,bd=features(d,kc)
             for name,s in sig.items():
@@ -122,8 +152,9 @@ def run():
                             pf=vbt.Portfolio.from_signals(z.close,en,ex,price=z.open,fees=fee,slippage=.0002,init_cash=10000,freq="1h",direction="shortonly" if short else "longonly")
                             daily=pf.value().resample("D").last().pct_change().dropna()
                             results.append(dict(symbol=symbol,kc=kc,strategy=name,split=split,hold=hold,fee=fee,trades=int(pf.trades.count()),return_pct=float(pf.total_return()*100),maxdd_pct=float(pf.max_drawdown()*100),sharpe=float(daily.mean()/daily.std()*np.sqrt(365)) if daily.std()>0 else np.nan,profit_factor=float(pf.trades.profit_factor()),positive_days=float((daily>0).mean())))
+        print(f"Completed {symbol}: {len(results)} cumulative backtests",flush=True)
         pd.DataFrame(results).to_csv(OUT/"backtest.csv",index=False);pd.DataFrame(events).to_csv(OUT/"events.csv",index=False)
-    pd.DataFrame(errors,columns=["symbol","error"]).to_csv(OUT/"errors.csv",index=False)
+    pd.DataFrame(errors,columns=["symbol","error","fallback_error"]).to_csv(OUT/"errors.csv",index=False)
     if not results:raise RuntimeError("No real market backtests completed")
 if __name__=="__main__":
     causal_test()

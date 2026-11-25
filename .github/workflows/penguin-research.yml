@@ -3,6 +3,9 @@ on:
   push:
     branches: [research/penguin-v631-frequency-profile]
     paths: ['research/run_v631.py', '.github/workflows/penguin-research.yml']
+  pull_request:
+    branches: [main]
+    paths: ['research/run_v631.py', '.github/workflows/penguin-research.yml']
   workflow_dispatch:
 jobs:
   research:

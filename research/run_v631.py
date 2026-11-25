@@ -96,7 +96,7 @@ def structure(d,cross,atr,p,diff):
         reject=bool(r and h>=r[0]>c)
         bd=bool(s and c<s[0])
         rows.append(dict(multi_bounce=bounce,multi_break=br,multi_reject_short=reject,multi_break_short=bd,
-            first_touch=bounce and s[2]==0,repeat_touch=bounce and s[2]>0,
+            first_touch=bounce and s[2]==0 and not s[3],repeat_touch=bounce and s[2]>0 and not s[3],
             old_support=bounce and i-s[1]>=24,
             multi_val=bounce and abs(s[0]-p.val.iloc[i])<=.5*a,
             multi_poc=bounce and abs(s[0]-p.poc.iloc[i])<=.5*a,
@@ -107,7 +107,7 @@ def structure(d,cross,atr,p,diff):
             if touching and not x[3]:x[2]+=1
             x[3]=touching
         levels=active
-        if cross.iloc[i]:levels.append([h,i,0,False])
+        if cross.iloc[i]:levels.append([h,i,0,True])
         levels=levels[-20:]
     return {k:v.astype(bool) for k,v in pd.DataFrame(rows,index=d.index).items()}
 def causal_test():
@@ -120,6 +120,10 @@ def causal_test():
         for k in full:pd.testing.assert_series_equal(full[k].iloc[:300],prefix[k])
 def detailed_events(d,sig,symbol,kc):
     rows=[]
+    close=d.close; atr=rma(pd.concat([d.high-d.low,(d.high-close.shift()).abs(),(d.low-close.shift()).abs()],axis=1).max(axis=1),20)
+    trend=close/close.rolling(200).mean()-1
+    vol=close.pct_change().rolling(24).std(); volrank=vol.rolling(720,min_periods=240).rank(pct=True)
+    p=pd.DataFrame([dict(profile(g)) for _,g in close.groupby(close.index.floor("D"))],index=close.index.floor("D").unique()).shift(1).reindex(close.index.floor("D"));p.index=close.index
     for name,s in sig.items():
         side=-1 if name.endswith("_short") else 1
         for i in np.flatnonzero(s.to_numpy()):
@@ -133,8 +137,11 @@ def detailed_events(d,sig,symbol,kc):
                 ret=side*(d.open.iloc[j+h]/entry-1)
                 mfe=(w.high.max()/entry-1) if side==1 else (1-w.low.min()/entry)
                 mae=(w.low.min()/entry-1) if side==1 else (1-w.high.max()/entry)
-                rows.append((symbol,kc,name,d.index[i],split,h,entry,ret,mfe,mae))
-    return pd.DataFrame(rows,columns=["symbol","kc","strategy","signal_time","split","horizon","entry","return","mfe","mae"])
+                best=w.high.to_numpy() if side==1 else -w.low.to_numpy()
+                worst=-w.low.to_numpy() if side==1 else w.high.to_numpy()
+                a=atr.iloc[i]
+                rows.append((symbol,kc,name,d.index[i],split,h,entry,ret,mfe,mae,int(best.argmax()+1),int(worst.argmax()+1),trend.iloc[i],volrank.iloc[i],(close.iloc[i]-p.poc.iloc[i])/a,(close.iloc[i]-p.val.iloc[i])/a,(close.iloc[i]-p.vah.iloc[i])/a,(p.vah.iloc[i]-p.val.iloc[i])/a))
+    return pd.DataFrame(rows,columns=["symbol","kc","strategy","signal_time","split","horizon","entry","return","mfe","mae","hours_to_mfe","hours_to_mae","trend200","vol_percentile","poc_distance_atr","val_distance_atr","vah_distance_atr","va_width_atr"])
 def run():
     results=[]; events=[]; errors=[]
     for symbol in ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT"]:

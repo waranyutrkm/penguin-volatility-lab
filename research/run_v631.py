@@ -142,6 +142,69 @@ def detailed_events(d,sig,symbol,kc):
                 a=atr.iloc[i]
                 rows.append((symbol,kc,name,d.index[i],split,h,entry,ret,mfe,mae,int(best.argmax()+1),int(worst.argmax()+1),trend.iloc[i],volrank.iloc[i],(close.iloc[i]-p.poc.iloc[i])/a,(close.iloc[i]-p.val.iloc[i])/a,(close.iloc[i]-p.vah.iloc[i])/a,(p.vah.iloc[i]-p.val.iloc[i])/a))
     return pd.DataFrame(rows,columns=["symbol","kc","strategy","signal_time","split","horizon","entry","return","mfe","mae","hours_to_mfe","hours_to_mae","trend200","vol_percentile","poc_distance_atr","val_distance_atr","vah_distance_atr","va_width_atr"])
+
+def adaptive(d,sig,symbol,kc):
+    # Annual walk-forward: select only from completed prior-year net event outcomes.
+    c=d.close; trend=c>c.rolling(200).mean()
+    vol=c.pct_change().rolling(24).std()
+    highvol=vol>vol.rolling(720,min_periods=240).median()
+    regime=trend.astype(int)*2+highvol.astype(int)
+    candidates=[]
+    for name,s in sig.items():
+        if name.endswith("_short"):continue
+        for h in [12,24,48,72,120,168]:
+            ret=d.open.shift(-h-1)/d.open.shift(-1)*(1-.001)*(1-.0002)/((1+.001)*(1+.0002))-1
+            candidates.append((name,h,s,ret))
+    rows=[]; selections=[]
+    for year in [2024,2025,2026]:
+        z=d.loc[d.index.year==year]
+        if len(z)<200:continue
+        chosen={}
+        for rg in range(4):
+            scores=[]
+            for name,h,s,ret in candidates:
+                m=(d.index.year<year)&(d.index.year>=year-1)&(regime==rg)&s
+                m=m & (pd.Series(d.index,index=d.index).shift(-h-1)<z.index[0])
+                x=ret[m].dropna()
+                # Thin overlapping observations before scoring.
+                keep=[]; last=None
+                for t in x.index:
+                    if last is None or t-last>=pd.Timedelta(hours=h+1):keep.append(t);last=t
+                x=x.loc[keep]
+                if len(x)>=20 and x.std()>0:
+                    score=x.mean()/x.std()*np.sqrt(len(x))
+                    if score>0:scores.append((score,name,h,s,len(x)))
+            if scores:
+                score,name,h,s,n=max(scores,key=lambda x:x[0])
+                chosen[rg]=(name,h,s)
+                selections.append(dict(symbol=symbol,kc=kc,year=year,regime=rg,strategy=name,hold=h,train_n=n,train_score=score))
+        en=np.zeros(len(z),bool);ex=en.copy();last=-1
+        for i in range(1,len(z)):
+            if i<=last:continue
+            rg=regime.loc[z.index[i-1]]
+            if rg not in chosen:continue
+            name,h,s=chosen[rg]
+            if s.loc[z.index[i-1]] and i+h<len(z):
+                en[i]=True;ex[i+h]=True;last=i+h
+        pf=vbt.Portfolio.from_signals(z.close,en,ex,price=z.open,fees=.001,slippage=.0002,init_cash=10000,freq="1h")
+        daily=pf.value().resample("D").last().pct_change().dropna()
+        rows.append(dict(symbol=symbol,kc=kc,year=year,trades=int(pf.trades.count()),return_pct=pf.total_return()*100,maxdd_pct=pf.max_drawdown()*100,sharpe=daily.mean()/daily.std()*np.sqrt(365) if daily.std()>0 else np.nan,positive_days=(daily>0).mean(),buyhold_pct=(z.close.iloc[-1]/z.open.iloc[0]-1)*100))
+    for data,kind in [(rows,"adaptive"),(selections,"adaptive_selection")]:
+        pd.DataFrame(data).to_csv(OUT/f"{kind}_{symbol}_{kc}.csv",index=False)
+
+def conditional_summary():
+    parts=[]
+    for path in OUT.glob("event_detail_*.csv.gz"):
+        x=pd.read_csv(path)
+        x["trend"]=np.where(x.trend200>0,"up","down")
+        x["vol"]=pd.cut(x.vol_percentile,[0,.33,.67,1],include_lowest=True)
+        x["poc_band"]=pd.cut(x.poc_distance_atr,[-np.inf,-2,-.5,.5,2,np.inf])
+        x["net_return"]=x["return"]-.0024
+        for feature in ["trend","vol","poc_band"]:
+            g=x.groupby(["symbol","kc","strategy","split","horizon",feature],observed=True).agg(n=("return","size"),mean=("return","mean"),net_mean=("net_return","mean"),median=("return","median"),win=("net_return",lambda s:(s>0).mean()),mfe=("mfe","median"),mae=("mae","median"),time_mfe=("hours_to_mfe","median")).reset_index().rename(columns={feature:"bucket"})
+            g["feature"]=feature;parts.append(g)
+    if parts:pd.concat(parts,ignore_index=True).to_csv(OUT/"conditional_eda.csv",index=False)
+
 def run():
     results=[]; events=[]; errors=[]
     for symbol in ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT"]:
@@ -155,6 +218,7 @@ def run():
         print(f"Loaded {symbol}: {len(d)} bars {d.index.min()} to {d.index.max()}",flush=True)
         for kc in [1.5,2.0]:
             sig,bear,bd=features(d,kc)
+            adaptive(d,sig,symbol,kc)
             detailed_events(d,sig,symbol,kc).to_csv(OUT/f"event_detail_{symbol}_{kc}.csv.gz",index=False)
             for name,s in sig.items():
                 short=name.endswith("_short")
@@ -186,6 +250,7 @@ def run():
         print(f"Completed {symbol}: {len(results)} cumulative backtests",flush=True)
         pd.DataFrame(results).to_csv(OUT/"backtest.csv",index=False);pd.DataFrame(events).to_csv(OUT/"events.csv",index=False)
     pd.DataFrame(errors,columns=["symbol","error","fallback_error"]).to_csv(OUT/"errors.csv",index=False)
+    conditional_summary()
     if not results:raise RuntimeError("No real market backtests completed")
 if __name__=="__main__":
     causal_test()

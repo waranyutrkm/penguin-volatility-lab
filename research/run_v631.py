@@ -48,14 +48,52 @@ def features(d,kc):
     rsi=(100-100/(1+u/v)).mask(v==0,100).mask((u==0)&(v!=0),0); ma=rsi.rolling(7).mean()
     bull=(rsi>ma)&(rsi.shift()<=ma.shift()); bear=(rsi<ma)&(rsi.shift()>=ma.shift())
     level=d.high.where(bull|bear).ffill().shift()
-    p=c.groupby(c.index.floor("D")).apply(profile).unstack().shift(1).reindex(c.index.floor("D")); p.index=c.index
+    p=pd.DataFrame([dict(profile(g)) for _,g in c.groupby(c.index.floor("D"))],index=c.index.floor("D").unique()).shift(1).reindex(c.index.floor("D")); p.index=c.index
     trend=c.ewm(span=12,adjust=False).mean()>c.ewm(span=26,adjust=False).mean()
     br=(c>level)&(prev<=level); bd=(c<level)&(prev>=level)
     bounce=(prev>level)&(d.low<=level)&(c>level)
     reject=(prev<level)&(d.high>=level)&(c<level)
     va=(c>p.vah)&(prev<=p.vah); re=(c>p.val)&(prev<=p.val)&(c<=p.vah)
     release=(diff>0)&(diff.shift()<=0)
-    return {"cross":bull,"release":release,"sr_break":br,"sr_bounce":bounce,"va_break":va,"va_reentry":re,"sr_val":bounce&((level-p.val).abs()<=.5*atr),"sr_expansion":br&(diff>0),"double_break":br&(c>p.vah),"trend_sr":bounce&trend,"sr_break_short":bd,"sr_reject_short":reject},bear,bd
+    extra=structure(d,bull|bear,atr,p,diff)
+    return {**extra,"cross":bull,"release":release,"sr_break":br,"sr_bounce":bounce,"va_break":va,"va_reentry":re,"sr_val":bounce&((level-p.val).abs()<=.5*atr),"sr_expansion":br&(diff>0),"double_break":br&(c>p.vah),"trend_sr":bounce&trend,"sr_break_short":bd,"sr_reject_short":reject},bear,bd
+def structure(d,cross,atr,p,diff):
+    # Levels become available only on the following bar.
+    levels=[]; rows=[]
+    for i,(o,h,l,c) in enumerate(d[["open","high","low","close"]].itertuples(index=False,name=None)):
+        prev=d.close.iloc[i-1] if i else np.nan
+        a=atr.iloc[i]; active=[x for x in levels if i-x[1]<=720]
+        supports=[x for x in active if x[0]<prev]
+        resistances=[x for x in active if x[0]>prev]
+        s=max(supports,key=lambda x:x[0],default=None)
+        r=min(resistances,key=lambda x:x[0],default=None)
+        bounce=bool(s and l<=s[0]<c)
+        br=bool(r and c>r[0])
+        reject=bool(r and h>=r[0]>c)
+        bd=bool(s and c<s[0])
+        rows.append(dict(multi_bounce=bounce,multi_break=br,multi_reject_short=reject,multi_break_short=bd,
+            first_touch=bounce and s[2]==0,repeat_touch=bounce and s[2]>0,
+            old_support=bounce and i-s[1]>=24,
+            multi_val=bounce and abs(s[0]-p.val.iloc[i])<=.5*a,
+            multi_poc=bounce and abs(s[0]-p.poc.iloc[i])<=.5*a,
+            multi_expansion=br and diff.iloc[i]>0,
+            multi_compression=bounce and diff.iloc[i]<=0))
+        for x in active:
+            touching=l<=x[0]<=h
+            if touching and not x[3]:x[2]+=1
+            x[3]=touching
+        levels=active
+        if cross.iloc[i]:levels.append([h,i,0,False])
+        levels=levels[-20:]
+    return {k:v.astype(bool) for k,v in pd.DataFrame(rows,index=d.index).items()}
+def causal_test():
+    rng=np.random.default_rng(42)
+    idx=pd.date_range("2023-01-01",periods=400,freq="h",tz="UTC")
+    c=pd.Series(100+np.cumsum(rng.normal(size=len(idx))),index=idx)
+    d=pd.DataFrame(dict(open=c,high=c+1,low=c-1,close=c,volume=1))
+    for kc in [1.5,2.0]:
+        full=features(d,kc)[0]; prefix=features(d.iloc[:300],kc)[0]
+        for k in full:pd.testing.assert_series_equal(full[k].iloc[:300],prefix[k])
 def run():
     results=[]; events=[]; errors=[]
     for symbol in ["BTCUSDT","ETHUSDT","SOLUSDT","BNBUSDT","XRPUSDT"]:
@@ -87,4 +125,6 @@ def run():
         pd.DataFrame(results).to_csv(OUT/"backtest.csv",index=False);pd.DataFrame(events).to_csv(OUT/"events.csv",index=False)
     pd.DataFrame(errors,columns=["symbol","error"]).to_csv(OUT/"errors.csv",index=False)
     if not results:raise RuntimeError("No real market backtests completed")
-if __name__=="__main__":run()
+if __name__=="__main__":
+    causal_test()
+    run()
